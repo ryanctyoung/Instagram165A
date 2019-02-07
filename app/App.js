@@ -2,25 +2,17 @@
  * Sample React Native App
  * https://github.com/facebook/react-native
  *
- * @format
  * @flow
  */
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Button, TextInput} from 'react-native';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
+import GenerateForm from 'react-native-form-builder';
 import { openDatabase } from 'react-native-sqlite-storage';
-
 var db = openDatabase({ name: 'users.db' });
 
 class HomeScreen extends Component{
-    constructor(props) {
-      super(props);
-      this.state = {
-        user: ''
-      };
-    }
-
     render() {
       var uid;
       const {navigate} = this.props.navigation;
@@ -53,12 +45,10 @@ class HomeScreen extends Component{
        <Text style={styles.welcome}>Hello {this.state.user}</Text>
         <Button block style={styles.button} onPress={() => navigate('Register')} title="Register" />
         <Button block style={styles.button} onPress={() => navigate('Login')} title="Login" />
-        <Button block style={styles.button} onPress={() => handlePress()} title = "Test" />
       </View>
     );
   }
 }
-
 
 class ProfileScreen extends Component{
     render() {
@@ -98,12 +88,13 @@ class LoginScreen extends Component{
               }
             });
   })
-};
+}; 
     return (
       <View style={styles.wrapper}>
-        <Text style={styles.welcome}>First Name</Text>
-        <TextInput placeholder="Rockstar" onChangeText={user_name => this.setState({ user_name })}/>
-        <TextInput placeholder="Enter a password" onChangeText={password => this.setState({ password })}/>
+
+        <Text style={styles.register}>Email</Text>
+        <TextInput style={styles.register}placeholder="Please Enter your username" onChangeText={user_name => this.setState({ user_name })}/>
+        <TextInput placeholder="Please Enter a password" onChangeText={password => this.setState({ password })}/>
         <Button icon="md-checkmark" iconPlacement="right" onPress={handlePress} title="Login"/>
       </View>
     );
@@ -114,36 +105,53 @@ class RegisterScreen extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      user_name: '',
+      FirstName: '',
+      LastName: '',
+      DOB: '',
+      PhoNum: '',
       email: '',
       password: '',
+
     };
   }
 
   render() {
     const handlePress = () => {
-      const { user_name } = this.state;
+      const { FirstName } = this.state;
+      const { LastName } = this.state;
+      const { DOB } = this.state;
+      const { PhoNum } = this.state;
       const { email } = this.state;
       const { password } = this.state;
       db.transaction(function(tx) {
           tx.executeSql('DROP TABLE IF EXISTS users', []);
           tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20), email VARCHAR(20), password VARCHAR(20))',
+            'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, FirstName VARCHAR(20),LastName VARCHAR(20), DOB VARCHAR(20), PhoNum INTEGERS,  email VARCHAR(20), password VARCHAR(20)),',
             []
           );
-          tx.executeSql(
-            'INSERT INTO users(user_name, email, password) VALUES (?,?,?)',
-            [user_name, email,password],
+          tx.executeSqandyl(
+            'INSERT INTO users(FirstName, LastName, DOB, PhoNum, email, password) VALUES (?,?,?,?,?,?)',
+            [FirstName, LastName, DOB, PhoNum, email,password],
             (tx, results) => {
-              console.log('Results, ' + results.rowsAffected + user_name + email + password);
+              console.log('Results, ' + results.rowsAffected + FirstName + LastName + DOB + PhoNum + email + password);
             });
   })
 };
     return (
         <View>
-            <TextInput placeholder="abc@gmail.com" onChangeText={email => this.setState({ email })} />
-            <TextInput placeholder="Rockstar" onChangeText={user_name => this.setState({ user_name })}/>
-            <TextInput placeholder="Enter a password" onChangeText={password => this.setState({ password })}/>
+            <Text style={styles.register}>First Name</Text>
+            <TextInput style={styles.register} placeholder="Please Enter Your First Name" onChangeText={FirstName => this.setState({ FirstName })} />
+            <Text style={styles.register}>Last Name</Text>
+            <TextInput placeholder="Please enter your Last Name" onChangeText={LastName => this.setState({ LastName})}/>
+            <Text style={styles.register}>Date of Birth (MM/DD/YYYY)</Text>
+            <TextInput placeholder="Please enter your date of birth" onChangeText={DOB => this.setState({ DOB})}/>
+            <Text style={styles.register}>Phone Number</Text>
+            <TextInput placeholder="Please enter your phone number" onChangeText={PhoNum => this.setState({ PhoNum})}/>
+            <Text style={styles.register}>Email</Text>
+            <TextInput placeholder="Please enter your email" onChangeText={email => this.setState({ email })}/>
+            <Text style={styles.register}>Password</Text>
+            <TextInput placeholder="Please enter your password" onChangeText={password => this.setState({ password })}/>
+
             <Button icon="md-checkmark" iconPlacement="right" onPress={handlePress} title="Register"/>
         </View>
     );
@@ -158,7 +166,7 @@ welcomewrap: {
 
 wrapper: {
     flex: 1,
-    marginTop: 150,
+    marginTop: 50,
   },
 submitButton: {
     paddingHorizontal: 10,
@@ -176,25 +184,32 @@ submitButton: {
     margin: 10,
     marginBottom:  175,
   },
+  register: {
+    fontSize: 15,
+    textAlign: 'left',
+    margin: 1,
+  },
+  button: {
+    
+  }
   instructions: {
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: 'red',
     borderColor: 'white',
     borderWidth: 1,
     borderRadius: 12,
     color: 'white',
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
     overflow: 'hidden',
     padding: 12,
     textAlign:'center',
   },
 });
-
 const RootStack = createStackNavigator(
   {
     Home: HomeScreen,
