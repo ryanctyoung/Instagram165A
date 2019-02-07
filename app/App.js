@@ -29,9 +29,9 @@ class HomeScreen extends Component{
 
       db.transaction(function(tx) {
           
-            tx.executeSql('CREATE TABLE IF NOT EXISTS Users(uid INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(20)) ');
-            tx.executeSql('INSERT INTO Users(name) VALUES("Amanda")');
-            tx.executeSql('SELECT name FROM Users a WHERE a.uid = ?', 
+            tx.executeSql('CREATE TABLE IF NOT EXISTS App(uid INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(20)) ');
+            tx.executeSql('INSERT INTO App(name) VALUES("Amanda")');
+            tx.executeSql('SELECT name FROM App a WHERE a.uid = ?', 
                   [0], (tx, results) => {
         
                   uid = results.row.item(0);
@@ -40,7 +40,7 @@ class HomeScreen extends Component{
 
         });
 
-          this.setState({user:uid});
+          this.setState((user) => {return {user:uid}; });
 
 
 
@@ -50,7 +50,7 @@ class HomeScreen extends Component{
 
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Hello {this.state.user}</Text>
+       <Text style={styles.welcome}>Hello {this.state.user}</Text>
         <Button block style={styles.button} onPress={() => navigate('Register')} title="Register" />
         <Button block style={styles.button} onPress={() => navigate('Login')} title="Login" />
         <Button block style={styles.button} onPress={() => handlePress()} title = "Test" />
@@ -101,6 +101,7 @@ class LoginScreen extends Component{
 };
     return (
       <View style={styles.wrapper}>
+        <Text style={styles.welcome}>First Name</Text>
         <TextInput placeholder="Rockstar" onChangeText={user_name => this.setState({ user_name })}/>
         <TextInput placeholder="Enter a password" onChangeText={password => this.setState({ password })}/>
         <Button icon="md-checkmark" iconPlacement="right" onPress={handlePress} title="Login"/>
@@ -150,6 +151,11 @@ class RegisterScreen extends Component{
 }
 
 const styles = StyleSheet.create({
+welcomewrap: {
+  flex: 1,
+  marginTop: 75
+},
+
 wrapper: {
     flex: 1,
     marginTop: 150,
@@ -168,6 +174,7 @@ submitButton: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
+    marginBottom:  175,
   },
   instructions: {
     textAlign: 'center',
