@@ -8,33 +8,23 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Button, TextInput} from 'react-native';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
-import GenerateForm from 'react-native-form-builder';
+/*import GenerateForm from 'react-native-form-builder';*/
 import { openDatabase } from 'react-native-sqlite-storage';
 var db = openDatabase({ name: 'users.db' });
+
+var currUser = 'AGGIE';
+
 
 class HomeScreen extends Component{
     render() {
       var uid;
       const {navigate} = this.props.navigation;
-    const {user} = this.state;
+    this.state = {
+        user: '',
+      };
     const handlePress = () => {
-
-      db.transaction(function(tx) {
-          
-            tx.executeSql('CREATE TABLE IF NOT EXISTS App(uid INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(20)) ');
-            tx.executeSql('INSERT INTO App(name) VALUES("Amanda")');
-            tx.executeSql('SELECT name FROM App a WHERE a.uid = ?', 
-                  [0], (tx, results) => {
-        
-                  uid = results.row.item(0);
-          
-          });
-
-        });
-
-          this.setState((user) => {return {user:uid}; });
-
-
+        const {user} = this.state;
+        this.setState((user) => {return {user:uid}; });
 
     };
     
@@ -42,25 +32,119 @@ class HomeScreen extends Component{
 
     return (
       <View style={styles.container}>
-       <Text style={styles.welcome}>Hello {this.state.user}</Text>
+       <Text style={styles.welcome}>aggiegram</Text>
         <Button block style={styles.button} onPress={() => navigate('Register')} title="Register" />
         <Button block style={styles.button} onPress={() => navigate('Login')} title="Login" />
+        <Button block style={styles.button} onPress={() => navigate('Profile', { pid: currUser })} title="Profile" />
       </View>
     );
   }
 }
 
+
+
+
+
 class ProfileScreen extends Component{
     render() {
       const handlePress = () => false
-      const name = this.props.navigation.state.params.name
-      return (
+        const { navigate } = this.props.navigation
+      const pid = this.props.navigation.state.params.pid
+      const name = currUser
+/*
+    TODO:
+    profile pic
+    Bio: display and edit
+    Follow backend query and insert
+    feed
+
+*/
+
+    if(pid == currUser)
+    {
+       return (
         <View style={styles.wrapper}>
-          <Text> Hello {name}</Text>
+          <Text> {name}'s Profile </Text>
+
+            <Text style={styles.profiledetail}> 10 </Text>
+           <Text style={styles.profiledetail}> Followers </Text>
+            <Button block style={styles.button} onPress={() => navigate('Edit')} title="Edit Profile" />
+
+            <Text style = {styles.bio}> I AM THUNDER HEAR ME WROAR </Text>
         </View>
       )
     }
+    else
+        {
+
+
+      return (
+        <View style={styles.wrapper}>
+          <Text> {name}'s Profile </Text>
+
+            <Text style={styles.profiledetail}> 10 </Text>
+           <Text style={styles.profiledetail}> Followers </Text>
+
+        <Button block style={styles.button} onPress={() => navigate('Profile')} title="Follow" />
+        <Text style = {styles.bio}> I AM THUNDER HEAR ME WROAR </Text>
+        </View>
+      )
+        }
+    }
 }
+
+
+class EditScreen extends Component{
+    constructor(props) {
+      super(props);
+      this.state = {
+        user_name: '',
+        email: '',
+        phone: ' ',
+        user_found: false,
+      };
+    }
+
+    render() {
+    const handlePress = () => false
+
+    strEmpty = (x) => {
+
+        if(x === "")
+        return true
+        else return false;
+    }
+
+    const donePress = () => {
+
+        if(strEmpty(user_name) || strEmpty(password) || strEmpty(phone))
+        return NULL
+
+        db.transaction(function(tx) {
+          tx.executeSql(
+            'UPDATE users u SET u.user_name = ?, u.email = ?, u.phone_number = ?, WHERE uid = ?', [user_name, email, phone_number, currUser],
+            (tx, results) => {
+              console.log('Results, ' + results);
+              if (results.rows.length > 0){
+                console.log("user found, "+user_name);
+                navigate('Profile', { name: user_name });
+              }
+            });
+
+    }
+    return (
+      <View style={styles.wrapper}>
+
+        <Text style={styles.register}>Email</Text>
+        <TextInput style={styles.register}placeholder="Please Enter your new username" onChangeText={user_name => this.setState({ user_name })}/>
+        <TextInput placeholder="Please Enter your new email" onChangeText={email => this.setState({ email })}/>
+        <TextInput placeholder="Please Enter your new phone number" onChangeText={ phone => this.setState({ phone })}/>
+        <Button icon="md-checkmark" iconPlacement="right" onPress={donePress} title="Done"/>
+      </View>
+    );
+  }
+}
+
 
 class LoginScreen extends Component{
     constructor(props) {
@@ -124,7 +208,7 @@ class RegisterScreen extends Component{
       const { email } = this.state;
       const { password } = this.state;
       db.transaction(function(tx) {
-          tx.executeSql('DROP TABLE IF EXISTS users', []);
+         
           tx.executeSql(
             'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, FirstName VARCHAR(20),LastName VARCHAR(20), DOB VARCHAR(20), PhoNum INTEGERS,  email VARCHAR(20), password VARCHAR(20)),',
             []
@@ -176,12 +260,13 @@ submitButton: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'white',
   },
   welcome: {
-    fontSize: 20,
+    fontSize: 50,
     textAlign: 'center',
     margin: 10,
+    fontWeight: 'bold',
     marginBottom:  175,
   },
   register: {
@@ -189,9 +274,7 @@ submitButton: {
     textAlign: 'left',
     margin: 1,
   },
-  button: {
-    
-  }
+
   instructions: {
     textAlign: 'center',
     color: '#333333',
@@ -209,6 +292,23 @@ submitButton: {
     padding: 12,
     textAlign:'center',
   },
+
+    
+  profiledetail: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    padding: 0,
+    marginLeft: 140,
+  },
+
+
+  bio: {
+    fontSize: 30,
+    textAlign: 'left',
+    marginTop: 30,
+  },
+
 });
 const RootStack = createStackNavigator(
   {
@@ -216,6 +316,7 @@ const RootStack = createStackNavigator(
     Login: LoginScreen,
     Register: RegisterScreen,
     Profile: ProfileScreen,
+    Edit: EditScreen,
   },
   {
     initialRouteName: 'Home',
