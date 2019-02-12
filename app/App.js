@@ -13,11 +13,29 @@ import { openDatabase } from 'react-native-sqlite-storage';
 
 var db = openDatabase({ name: 'users.db' });
 
-const userTuple = {uid:'AGGIE', bio:'', followers: 0};
+var userTuple = {uid: 0,  user_name:'AGGIE', bio:'', followers: 0};
 var currUser = userTuple.uid;
 
 
 class HomeScreen extends Component{
+
+    constructor(props)
+    {
+      super(props);
+      db.transaction(function(tx)
+        {
+          //tx.executeSql('DROP TABLE IF EXISTS users', []);
+          
+          tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20), email VARCHAR(20), password VARCHAR(20), DOB INTEGER, phoneNum INTEGER)',
+            []
+          );
+          tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS followers(followedID INTEGER, followerID INTEGER, date INTEGER default 0)',
+            []
+          );
+        });
+    }
     render() {
       var uid;
       const {navigate} = this.props.navigation;
@@ -37,8 +55,8 @@ class HomeScreen extends Component{
        <Text style={styles.welcome}>aggiegram</Text>
         <Button block style={styles.button} onPress={() => navigate('Register')} title="Register" />
         <Button block style={styles.button} onPress={() => navigate('Login')} title="Login" />
-        <Button block style={styles.button} onPress={() => navigate('Profile', { uid: currUser })} title="Profile" />
-        <Button block style={styles.button} onPress={() => navigate('Profile', { uid: 'COW' })} title="Other Profile" />
+        <Button block style={styles.button} onPress={() => navigate('Profile', { uid: userTuple.uid })} title="Profile" />
+        <Button block style={styles.button} onPress={() => navigate('Profile', { uid: 1 })} title="Other Profile" />
       </View>
     );
   }
@@ -46,27 +64,48 @@ class HomeScreen extends Component{
 
 
 
-
+//
 
 class ProfileScreen extends Component{
 
     constructor(props) {
       super(props);
-      this.state = {
+      userName = '';
+      db.transaction(function(tx)
+          {
+            tx.executeSql('SELECT * from users U WHERE U.user_id = ?',[this.props.navigation.state.params.uid],
+              (tx,results) => {
+                if(results.rows.length = 1)
+                {
+                  userName = userresults.rows.item(0).user_name;
+                }
+                else
+                {
+                  userName = 'ERROR';
+                }
+              }
+              );
+            userName = 'ERROR';
+          });
+
+        this.state = {
 
         //get follow amount here
-        user_name: this.props.navigation.state.params.uid,
+        uid: this.props.navigation.state.params.uid,
+        user_name : userName,
         followers: 0,
         following: 0,
-      };
+        
     }
 
+      };
+      
     render() {
       const handlePress = () => false
         const { navigate } = this.props.navigation
       
+      const {uid} = this.state
       const {user_name} = this.state
-      const name = currUser
 /*
     TODO:
     profile pic
@@ -76,15 +115,22 @@ class ProfileScreen extends Component{
 */
     navigatePress = () => 
     {
-      if(user_name == currUser)
+      if(uid == userTuple.uid)
       {
         navigate('Edit')
       }
       else //follower query HERE
       {
         //INSERT (currUser,today's date) into Users u.follow where SELECT Users u where u.uid == uid
+        db.transaction(function(tx) {
+          tx.executeSql('UPDATE users u SET u.PhoNum = ? WHERE u.uid = ?',[1, user_name]
 
-      }
+            );
+          tx.executeSql('INSERT INTO followers (followerID, followedID) VALUES (?,?)', [userTuple.uid, user])
+
+          });
+
+        }
     }
        return (
         <View style={styles.wrapper}>
@@ -92,7 +138,7 @@ class ProfileScreen extends Component{
 
             <Text style={styles.profiledetail}> {this.state.followers} </Text>
            <Text style={styles.profiledetail}> Followers </Text>
-           <Button block style={styles.button} onPress={navigatePress} title ={ user_name == currUser ? 'Edit Profile' : 'Follow'}/>
+           <Button block style={styles.button} onPress={navigatePress} title ={ uid == userTuple.uid ? 'Edit Profile' : 'Follow'}/>
             
             <Text style = {styles.bio}> Bio goes here. </Text>
         </View>
@@ -135,7 +181,7 @@ class EditScreen extends Component{
         db.transaction(function(tx) {
 
           tx.executeSql(
-            'UPDATE users u SET u.user_name = ?, u.email = ?, u.PhoNum = ?, WHERE uid = ?', [user_name, email, phone, currUser],
+            'UPDATE users u SET u.user_name = ?, u.email = ?, u.PhoNum = ?, WHERE u.user_id = ?', [user_name, email, phone, currUser],
             (tx, results) => {
               console.log('Results, ' + results);
               if (results.rows.length > 0){
@@ -187,7 +233,9 @@ class LoginScreen extends Component{
               console.log('Results, ' + results);
               if (results.rows.length > 0){
                 console.log("user found, "+user_name);
-                navigate('Profile', { uid: user_name });
+                userTuple.uid = results.rows.item(0).user_id;
+                userTuple.user_name = user_name;
+                navigate('Profile', { uid: results.rows.item(0).user_id });
               }
             });
   })
@@ -227,18 +275,15 @@ class RegisterScreen extends Component{
       const { DOB } = this.state;
       const { phoneNum } = this.state;
       db.transaction(function(tx) {
-          //tx.executeSql('DROP TABLE IF EXISTS users', []);
-          tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20), email VARCHAR(20), password VARCHAR(20), DOB INTEGER, phoneNum INTEGER)',
-            []
-          );
+          
           tx.executeSql(
             'INSERT INTO users(user_name, email, password, DOB, phoneNum) VALUES (?,?,?,?,?)',
             [user_name, email,password, DOB, phoneNum],
             (tx, results) => {
               console.log('Results, ' + results.rowsAffected + user_name + email + password + DOB + phoneNum);
-              currUser = user_name;
-              navigate('Profile', {uid:user_name});
+              userTuple.user_name = user_name;
+              userTuple.uid = results.rows.item(0).user_id;
+              navigate('Profile', {uid:results.rows.item(0).user_id});
             });
   })
 };
