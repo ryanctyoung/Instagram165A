@@ -130,15 +130,18 @@ class EditScreen extends Component{
                 navigate('Profile', { name: user_name });
               }
             });
-
-    }
+    })
+  };
     return (
       <View style={styles.wrapper}>
-
-        <Text style={styles.register}>Email</Text>
-        <TextInput style={styles.register}placeholder="Please Enter your new username" onChangeText={user_name => this.setState({ user_name })}/>
-        <TextInput placeholder="Please Enter your new email" onChangeText={email => this.setState({ email })}/>
-        <TextInput placeholder="Please Enter your new phone number" onChangeText={ phone => this.setState({ phone })}/>
+            <Text style={styles.register}>user name</Text>
+            <TextInput placeholder="Please enter your email" onChangeText={user_name => this.setState({ user_name })}/>
+            <Text style={styles.register}>Email</Text>
+            <TextInput placeholder="Please enter your email" onChangeText={email => this.setState({ email })}/>
+            <Text style={styles.register}>Phone Number</Text>
+            <TextInput placeholder="Please enter your phone number" onChangeText={PhoNum => this.setState({ PhoNum})}/>
+            
+            
         <Button icon="md-checkmark" iconPlacement="right" onPress={donePress} title="Done"/>
       </View>
     );
@@ -201,6 +204,7 @@ class RegisterScreen extends Component{
 
   render() {
     const handlePress = () => {
+      const { user_name } = this.state;
       const { FirstName } = this.state;
       const { LastName } = this.state;
       const { DOB } = this.state;
@@ -210,19 +214,21 @@ class RegisterScreen extends Component{
       db.transaction(function(tx) {
          
           tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, FirstName VARCHAR(20),LastName VARCHAR(20), DOB VARCHAR(20), PhoNum INTEGERS,  email VARCHAR(20), password VARCHAR(20)),',
+            'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20), FirstName VARCHAR(20),LastName VARCHAR(20), DOB VARCHAR(20), PhoNum INTEGERS,  email VARCHAR(20), password VARCHAR(20)),',
             []
           );
           tx.executeSqandyl(
-            'INSERT INTO users(FirstName, LastName, DOB, PhoNum, email, password) VALUES (?,?,?,?,?,?)',
+            'INSERT INTO users(user_name,FirstName, LastName, DOB, PhoNum, email, password) VALUES (?,?,?,?,?,?,?)',
             [FirstName, LastName, DOB, PhoNum, email,password],
             (tx, results) => {
-              console.log('Results, ' + results.rowsAffected + FirstName + LastName + DOB + PhoNum + email + password);
+              console.log('Results, ' + results.rowsAffected + user_name + FirstName + LastName + DOB + PhoNum + email + password);
             });
   })
 };
     return (
         <View>
+          <Text style={styles.register}>User name</Text>
+            <TextInput style={styles.register} placeholder="Please Enter Your user name" onChangeText={user_name=> this.setState({ user_name })} />
             <Text style={styles.register}>First Name</Text>
             <TextInput style={styles.register} placeholder="Please Enter Your First Name" onChangeText={FirstName => this.setState({ FirstName })} />
             <Text style={styles.register}>Last Name</Text>
