@@ -35,7 +35,8 @@ class HomeScreen extends Component{
        <Text style={styles.welcome}>aggiegram</Text>
         <Button block style={styles.button} onPress={() => navigate('Register')} title="Register" />
         <Button block style={styles.button} onPress={() => navigate('Login')} title="Login" />
-        <Button block style={styles.button} onPress={() => navigate('Profile', { pid: currUser })} title="Profile" />
+        <Button block style={styles.button} onPress={() => navigate('Profile', { uid: currUser })} title="Profile" />
+        <Button block style={styles.button} onPress={() => navigate('Profile', { uid: 'COW' })} title="Other Profile" />
       </View>
     );
   }
@@ -46,10 +47,18 @@ class HomeScreen extends Component{
 
 
 class ProfileScreen extends Component{
+
+    constructor(props) {
+      super(props);
+      this.state = {
+        user_name: this.props.navigation.state.params.uid,
+        
+      };
+    }
     render() {
       const handlePress = () => false
         const { navigate } = this.props.navigation
-      const pid = this.props.navigation.state.params.pid
+      const uid = this.props.navigation.state.params.uid
       const name = currUser
 /*
     TODO:
@@ -59,37 +68,28 @@ class ProfileScreen extends Component{
     feed
 
 */
-
-    if(pid == currUser)
+    navigatePress = () => 
     {
+      if(uid == currUser)
+      {
+        navigate('Edit')
+      }
+      else
+      {
+
+      }
+    }
        return (
         <View style={styles.wrapper}>
           <Text> {name}'s Profile </Text>
 
             <Text style={styles.profiledetail}> 10 </Text>
            <Text style={styles.profiledetail}> Followers </Text>
-            <Button block style={styles.button} onPress={() => navigate('Edit')} title="Edit Profile" />
-
+           <Button block style={styles.button} onPress={navigatePress} title = "Edit Profile" />
+            
             <Text style = {styles.bio}> I AM THUNDER HEAR ME WROAR </Text>
         </View>
       )
-    }
-    else
-        {
-
-
-      return (
-        <View style={styles.wrapper}>
-          <Text> {name}'s Profile </Text>
-
-            <Text style={styles.profiledetail}> 10 </Text>
-           <Text style={styles.profiledetail}> Followers </Text>
-
-        <Button block style={styles.button} onPress={() => navigate('Profile')} title="Follow" />
-        <Text style = {styles.bio}> I AM THUNDER HEAR ME WROAR </Text>
-        </View>
-      )
-        }
     }
 }
 
@@ -118,7 +118,7 @@ class EditScreen extends Component{
     const donePress = () => {
 
         if(strEmpty(user_name) || strEmpty(password) || strEmpty(phone))
-        return NULL
+        {return NULL}
 
         db.transaction(function(tx) {
           tx.executeSql(
@@ -130,8 +130,10 @@ class EditScreen extends Component{
                 navigate('Profile', { name: user_name });
               }
             });
-
+        });
+    
     }
+
     return (
       <View style={styles.wrapper}>
 
