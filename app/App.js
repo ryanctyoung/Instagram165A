@@ -31,7 +31,7 @@ class HomeScreen extends Component{
             []
           );
           tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS followers(followedID INTEGER, followerID INTEGER, date INTEGER default 0)',
+            'CREATE TABLE IF NOT EXISTS followers(followedID INTEGER, followerID INTEGER, date INTEGER default 0, UNIQUE (followedID, followerID, date))',
             []
           );
         });
@@ -71,21 +71,26 @@ class ProfileScreen extends Component{
     constructor(props) {
       super(props);
       userName = '';
+      phoNum = 0;
       db.transaction(function(tx)
           {
             tx.executeSql('SELECT * from users U WHERE U.user_id = ?',[this.props.navigation.state.params.uid],
               (tx,results) => {
-                if(results.rows.length = 1)
+                if(results.rows.length > 0)
                 {
-                  userName = userresults.rows.item(0).user_name;
+                  userName = results.rows.item(0).user_name;
+                  
+                  phoNum = results.rows.item(0).PhoNum;
                 }
                 else
                 {
                   userName = 'ERROR';
                 }
+
               }
+
               );
-            userName = 'ERROR';
+            
           });
 
         this.state = {
@@ -93,6 +98,7 @@ class ProfileScreen extends Component{
         //get follow amount here
         uid: this.props.navigation.state.params.uid,
         user_name : userName,
+        pho_num : phoNum,
         followers: 0,
         following: 0,
         
@@ -123,10 +129,10 @@ class ProfileScreen extends Component{
       {
         //INSERT (currUser,today's date) into Users u.follow where SELECT Users u where u.uid == uid
         db.transaction(function(tx) {
-          tx.executeSql('UPDATE users u SET u.PhoNum = ? WHERE u.uid = ?',[1, user_name]
+          tx.executeSql('UPDATE users u SET u.PhoNum = ? WHERE u.user_id = ?',[1, user_name]
 
             );
-          tx.executeSql('INSERT INTO followers (followerID, followedID) VALUES (?,?)', [userTuple.uid, user])
+          tx.executeSql('INSERT INTO followers (followerID, followedID) VALUES (?,?)', [userTuple.uid, uid])
 
           });
 
@@ -282,9 +288,9 @@ class RegisterScreen extends Component{
             (tx, results) => {
               console.log('Results, ' + results.rowsAffected + user_name + email + password + DOB + phoneNum);
               userTuple.user_name = user_name;
-              userTuple.uid = results.rows.item(0).user_id;
-              navigate('Profile', {uid:results.rows.item(0).user_id});
-            });
+              userTuple.uid = results.insertID;
+              navigate('Profile', {uid:results.insertID});
+            }); 
   })
 };
     return (
