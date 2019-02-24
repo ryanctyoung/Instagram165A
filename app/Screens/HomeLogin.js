@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Button, TextInput, } from 'react-native';
 import {NavigationActions, StackActions} from 'react-navigation';
 import {openDatabase} from 'react-native-sqlite-storage';
-import {Database} from "../App.js";
+import {database} from "../App.js";
 import {styles} from '../StyleSheet.js';
 
 export {HomeScreen, LoginScreen, RegisterScreen} 
 
-var db = Database.GetConnection();
+var db = openDatabase(database);
 
 class HomeScreen extends Component{
     constructor(props)
@@ -68,36 +68,6 @@ class HomeScreen extends Component{
   }
 }
 
-class FeedScreen extends Component{
-
-  constructor(props)
-  {
-    super(props);
-    this.state = {search: '',}
-  }
-
-  updateSearch = search => {
-    this.setState({ search });
-  };
-
-  render()
-  {
-    const { search } = this.state;
-
-    return (
-    <View style = {styles.wrapper}> 
-    <Text style={styles.register}>Feed</Text>
-
-    <SearchBar
-        placeholder="Type Here..."
-        onChangeText={this.updateSearch}
-        value={search}
-      />
-
-
-    </View>);
-  }
-}
 
 class LoginScreen extends Component{
     constructor(props) {
