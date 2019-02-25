@@ -133,6 +133,65 @@ class RegisterScreen extends Component{
   }
 
   render() {
+
+    register_user = () => {
+    var that = this;
+    const { navigate } = this.props.navigation;
+      const { FirstName } = this.state;
+      const { LastName } = this.state;
+      const { user_name } = this.state;
+      const { email } = this.state;
+      const { password } = this.state;
+      const { DOB } = this.state;
+      const { phoneNum } = this.state;
+    alert(FirstName, user_name, email);
+    if (user_name) {
+      if (phoneNum) {
+        if (email) {
+          db.transaction(function(tx) {
+            tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20), FirstName VARCHAR(20), LastName VARCHAR(20), email VARCHAR(20), password VARCHAR(20), DOB INTEGER DEFAULT 0, phoneNum INTEGER DEFAULT 0)',
+            []
+          );
+          tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS followers(followedID INTEGER, followerID INTEGER, date INTEGER default 0, UNIQUE (followedID, followerID, date))',
+            []
+          );
+            tx.executeSql(
+             'INSERT INTO users(user_name, FirstName, LastName, email, password, DOB, phoneNum) VALUES (?,?,?,?,?,?,?)',
+            [user_name, FirstName, LastName, email,password, DOB, phoneNum],
+              (tx, results) => {
+                console.log('Results', results.rowsAffected + user_name + phoneNum + email); 
+                if (results.rowsAffected > 0) {
+                  Alert.alert(
+                    'Success',
+                    'You are registered successfully',
+                    [
+                      {
+                        text: 'Ok',
+                        onPress: () =>
+                          that.props.navigation.navigate('Home'),
+                      },
+                    ],
+                    { cancelable: false }
+                  );
+                } else {
+                  alert('Registration Failed');
+                }
+              }
+            );
+          });
+        } else {
+          alert('Please fill Address');
+        }
+      } else {
+        alert('Please fill Contact Number');
+      }
+    } else {
+      alert('Please fill Name');
+    }
+  };
+
     const handlePress = () => {
       const { navigate } = this.props.navigation;
       const { FirstName } = this.state;
@@ -142,6 +201,7 @@ class RegisterScreen extends Component{
       const { password } = this.state;
       const { DOB } = this.state;
       const { phoneNum } = this.state;
+
       db.transaction(function(tx) {
           tx.executeSql('DROP TABLE IF EXISTS users', []);
 
@@ -166,7 +226,7 @@ class RegisterScreen extends Component{
   })
 };
     return (
-        <View>
+        <View style = {styles.container}>
           <Text style={styles.register}>User name</Text>
             <TextInput style={styles.register} placeholder="Please Enter Your user name" onChangeText={user_name=> this.setState({ user_name })} />
             <Text style={styles.register}>First Name</Text>
@@ -182,7 +242,7 @@ class RegisterScreen extends Component{
             <Text style={styles.register}>Password</Text>
             <TextInput placeholder="Please enter your password" onChangeText={password => this.setState({ password })}/>
 
-            <Button icon="md-checkmark" iconPlacement="right" onPress={handlePress} title="Register"/>
+            <Button icon="md-checkmark" iconPlacement="right" onPress={register_user} title="Register"/>
         </View>
     );
   }
