@@ -1,138 +1,72 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Button, TextInput, } from 'react-native';
-import{SearchBar,} from 'react-native-elements';
-import {createStackNavigator, createSwitchNavigator, createBottomTabNavigator, createAppContainer,NavigationActions, StackActions} from 'react-navigation';
-/*import GenerateForm from 'react-native-form-builder';*/
-import {HomeScreen, LoginScreen, RegisterScreen} from './Screens/HomeLogin.js'
-import {ProfileScreen, EditScreen} from './Screens/ProfileScreens.js';
-import {openDatabase} from 'react-native-sqlite-storage';
-import {styles} from './StyleSheet.js';
-
-//export {Database, currUser, userTuple};
-//var db = openDatabase({ name: 'users.db' });
-
-var database = {name:'users.db'};
-var db = openDatabase({name:'users.db'});
-var userTuple = {uid: -1,  user_name:'AGGIE', bio:'', followers: 0};
-var currUser = -1;
-
-/*class Database
-{
-  GetConnection()
-  {
-    return openDatabase({ name: 'users.db' });
-  }
-}*/
-export{db as database};
-class FeedScreen extends Component{
-  
-  constructor(props)
-  {
-    super(props);
-    this.state = {search: '',}
-  }
-
-  updateSearch = search => {
-    this.setState({ search });
-  };
-
-
-  render()
-  {
-    const { search } = this.state;
-
-    return (
-    <View style = {feedUI.wrapper}> 
-    <Text style={feedUI.label}>Feed</Text>
-
-    <SearchBar
-        placeholder="User Search"
-        onChangeText={this.updateSearch}
-        value={search}
-      />
-
-    </View>);
-  }
-}
-
-const feedUI = StyleSheet.create(
-  {
-    wrapper : {
-      flex: 1,
-      backgroundColor: 'lightblue',
+/*Example of SQLite Database in React Native*/
+import React from 'react';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
+import HomeScreen from './pages/HomeScreen';
+import RegisterUser from './pages/RegisterUser';
+import UpdateUser from './pages/UpdateUser';
+import ViewUser from './pages/ViewUser';
+import ViewAllUser from './pages/ViewAllUser';
+import DeleteUser from './pages/DeleteUser';
+import Upload from './pages/Upload';
+ 
+const App = createStackNavigator({
+  HomeScreen: {
+    screen: HomeScreen,
+    navigationOptions: {
+      title: 'HomeScreen',
+      headerStyle: { backgroundColor: '#f05555' },
+      headerTintColor: '#ffffff',
     },
-
-    label:{
-      fontSize: 50,
-    color: 'yellow',
-    textAlign: 'left',
-    margin: 10,
-    fontWeight: 'bold',
-    }
-  }
-);
-
-
-
-const ProfileStack = createStackNavigator(
-  {
-    Profile: ProfileScreen,
-    Edit: EditScreen,
-
-
   },
-
-    {
-    initialRouteName: 'Profile',
-    initialRouteParams: {uid: 1},
-  }
-);
-
-const FeedStack = createStackNavigator(
-  {
-    Feed: FeedScreen,
-    Profile: ProfileStack,
-    //photo stack
-  }
-);
-
-
-const TabNavigator = createBottomTabNavigator(
-  {
-    Feed:FeedStack,
-    Profile: ProfileStack,
-    //Settings: SettingStack,
-
-    
-
+  View: {
+    screen: ViewUser,
+    navigationOptions: {
+      title: 'View User',
+      headerStyle: { backgroundColor: '#f05555' },
+      headerTintColor: '#ffffff',
+    },
   },
-  {
-    initialRouteName: 'Feed',
-  }
-
-)
-
-
-const EntryStack = createSwitchNavigator(
-  {
-    Home: HomeScreen,
-    Login: LoginScreen,
-    Register: RegisterScreen,
-    App: TabNavigator,
+  ViewAll: {
+    screen: ViewAllUser,
+    navigationOptions: {
+      title: 'View All User',
+      headerStyle: { backgroundColor: '#f05555' },
+      headerTintColor: '#ffffff',
+    },
   },
-  {
-    initialRouteName: 'Home',
-    initialRouteParams: {uid: -1},
-  }
-);
+  Update: {
+    screen: UpdateUser,
+    navigationOptions: {
+      title: 'Update User',
+      headerStyle: { backgroundColor: '#f05555' },
+      headerTintColor: '#ffffff',
+    },
+  },
+  Register: {
+    screen: RegisterUser,
+    navigationOptions: {
+      title: 'Register User',
+      headerStyle: { backgroundColor: '#f05555' },
+      headerTintColor: '#ffffff',
+    },
+  },
+  Delete: {
+    screen: DeleteUser,
+    navigationOptions: {
+      title: 'Delete User',
+      headerStyle: { backgroundColor: '#f05555' },
+      headerTintColor: '#ffffff',
+    },
+  },
+  Upload: {
+    screen: Upload,
+    navigationOptions: {
+      title: 'Upload',
+      headerStyle: { backgroundColor: '#f05555' },
+      headerTintColor: '#ffffff',
+    },
+  },
+});
+const AppCotainer = createAppContainer(App);
 
-
-
-const AppContainer = createAppContainer(EntryStack);
-type Props = {};
-export default class App extends Component<Props> {
-  render() {
-    const handlePress = () => false
-    return <AppContainer />;
-  }
-}
+export default AppCotainer;
