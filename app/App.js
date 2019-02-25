@@ -24,11 +24,7 @@ var currUser = -1;
   }
 }*/
 export{db as database};
-
-
-
 class FeedScreen extends Component{
-
   
   constructor(props)
   {
