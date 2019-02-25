@@ -79,9 +79,6 @@ class EditScreen extends Component{
       return true
       else return false;
   }
-
-
-  
     const donePress = () => {
     const { user_name } = this.state;
     const { email } = this.state;
@@ -102,9 +99,6 @@ class EditScreen extends Component{
             navigate('Profile', { uid: userTuple.uid, user_name:user_name, pho_num:phone });
         });
     };
-
-
-
     return (
       <View style={styles.wrapper}>
             <Text style={styles.register}>user name</Text>

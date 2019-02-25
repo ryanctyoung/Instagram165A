@@ -55,6 +55,8 @@ class FeedScreen extends Component{
         value={search}
       />
 
+      //Photo Feed Display, size of 1 for now
+
     </View>);
   }
 }
@@ -126,7 +128,7 @@ const EntryStack = createSwitchNavigator(
   },
   {
     initialRouteName: 'Home',
-    initialRouteParams: {uid: -1},
+    initialRouteParams: {uid: 1},
   }
 );
 
