@@ -7,7 +7,7 @@ import {styles} from '../StyleSheet.js';
 
 export {HomeScreen, LoginScreen, RegisterScreen} 
 
-var db = openDatabase(database);
+var db = openDatabase({name:'users.db'});
 
 class HomeScreen extends Component{
     constructor(props)
@@ -24,7 +24,7 @@ class HomeScreen extends Component{
     const { reset } = this.props.navigation;
 
     const profilePress = (x) => {
-          var userName = x;
+          var userName = '';
           var phoNum = 0;
         db.transaction(function(tx)
           {
@@ -32,9 +32,10 @@ class HomeScreen extends Component{
               (tx,results) => {
                 if(results.rows.length > 0)
                 {
+                  currUser = x;
                   userName = results.rows.item(0).user_name;
                   phoNum = results.rows.item(0).phoneNum;
-                  reset([NavigationActions.navigate({routeName : 'Feed'})] , 0 );
+                  navigate('App', {uid: currUser, user_name: userName, pho_num:phoNum});
                 }
                 else
                 {
@@ -97,8 +98,10 @@ class LoginScreen extends Component{
               console.log('Results, ' + results.rows.item(0).email);
               if (results.rows.length > 0){
                 currUser = results.rows.item(0).user_id;
-                //navigate('Feed');
-                reset([NavigationActions.navigate({routeName : 'Feed'})] , 0 );
+                userName = results.rows.item(0).user_name;
+                phoNum = results.rows.item(0).phoneNum;
+                navigate('App', {uid: currUser, user_name: userName, pho_num:phoNum});
+                //reset([NavigationActions.navigate({routeName : 'App'})] , 0 );
               }
             });
   })

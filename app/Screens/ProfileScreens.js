@@ -7,8 +7,7 @@ import {styles} from '../StyleSheet.js';
 
 export {ProfileScreen, EditScreen} 
 
-var db = openDatabase(database);
-
+var db = openDatabase({name:'users.db'});
 class ProfileScreen extends Component{
     constructor(props) {
       super(props);
@@ -26,8 +25,7 @@ class ProfileScreen extends Component{
      // const {user_name} = this.state
       const {pho_num} = this.state
       const { navigate } = this.props.navigation
-      const name = this.props.navigation.state.params.user_name
-      const phone = this.props.navigation.state.params.phone
+      const {user_name} = this.state
       const mail= this.props.navigation.state.params.mail
       
       const {uid} = this.state
@@ -49,16 +47,15 @@ class ProfileScreen extends Component{
     }
        return (
         <View style={styles.wrapper}>
-          <Text> {name}'s Profile </Text>
+          <Text> {user_name}'s Profile </Text>
             <Text style={styles.profiledetail}> {this.state.followers} </Text>
            <Text style={styles.profiledetail}> Followers </Text>
            
            <Button block style={styles.button} onPress={navigatePress} title ={ uid == currUser ? 'Edit Profile' : 'Follow'}/>
             <Text style = {styles.bio}> {pho_num} </Text>
    
-          <Text> Hello {name}!!! </Text>
-          <Text> my email is {mail} </Text>     
-           <Text> my phone number is {phone}</Text>   
+          <Text> Hello {user_name}!!! </Text>    
+           <Text> my phone number is {pho_num}</Text>   
         </View>
       )
     }

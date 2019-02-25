@@ -9,19 +9,23 @@ welcomewrap: {
 wrapper: {
     flex: 1,
     marginTop: 50,
+    backgroundColor: 'lightblue',
   },
 submitButton: {
     paddingHorizontal: 10,
+    color: 'yellow',
     paddingTop: 20,
   },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    color: 'yellow',
+    backgroundColor: 'lightblue',
   },
   welcome: {
     fontSize: 50,
+    color: 'yellow',
     textAlign: 'center',
     margin: 10,
     fontWeight: 'bold',
@@ -29,21 +33,23 @@ submitButton: {
   },
   register: {
     fontSize: 15,
+    color: 'yellow',
     textAlign: 'left',
     margin: 1,
   },
 
   instructions: {
     textAlign: 'center',
+    color: 'yellow',
     color: '#333333',
     marginBottom: 5,
   },
   button: {
-    backgroundColor: 'red',
     borderColor: 'white',
     borderWidth: 1,
+
     borderRadius: 12,
-    color: 'white',
+    color: 'yellow',
     fontSize: 30,
     fontWeight: 'bold',
     overflow: 'hidden',
@@ -65,6 +71,10 @@ submitButton: {
     fontSize: 30,
     textAlign: 'left',
     marginTop: 30,
+  },
+
+  feed: {
+    
   },
 
 });
