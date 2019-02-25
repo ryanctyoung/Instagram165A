@@ -7,7 +7,7 @@ import {HomeScreen, LoginScreen, RegisterScreen} from './Screens/HomeLogin.js'
 import {ProfileScreen, EditScreen} from './Screens/ProfileScreens.js';
 import {openDatabase} from 'react-native-sqlite-storage';
 import {styles} from './StyleSheet.js';
-
+import FeedScreen from './Screens/FeedScreen';
 //export {Database, currUser, userTuple};
 //var db = openDatabase({ name: 'users.db' });
 
@@ -25,58 +25,6 @@ var currUser = -1;
 }*/
 export{db as database};
 
-
-
-class FeedScreen extends Component{
-
-  
-  constructor(props)
-  {
-    super(props);
-    this.state = {search: '',}
-  }
-
-  updateSearch = search => {
-    this.setState({ search });
-  };
-
-
-  render()
-  {
-    const { search } = this.state;
-
-    return (
-    <View style = {feedUI.wrapper}> 
-    <Text style={feedUI.label}>Feed</Text>
-
-    <SearchBar
-        placeholder="User Search"
-        onChangeText={this.updateSearch}
-        value={search}
-      />
-
-      //Photo Feed Display, size of 1 for now
-
-    </View>);
-  }
-}
-
-const feedUI = StyleSheet.create(
-  {
-    wrapper : {
-      flex: 1,
-      backgroundColor: 'lightblue',
-    },
-
-    label:{
-      fontSize: 50,
-    color: 'yellow',
-    textAlign: 'left',
-    margin: 10,
-    fontWeight: 'bold',
-    }
-  }
-);
 
 
 
