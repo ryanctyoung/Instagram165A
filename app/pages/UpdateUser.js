@@ -4,7 +4,7 @@ import { View, YellowBox, ScrollView, KeyboardAvoidingView, Alert, } from 'react
 import Mytextinput from './components/Mytextinput';
 import Mybutton from './components/Mybutton';
 import { openDatabase } from 'react-native-sqlite-storage';
-var db = openDatabase({ name: 'UserDatabase.db' });
+var db = openDatabase({ name: 'UserData.db' });
 
 export default class UpdateUser extends React.Component {
   constructor(props) {
@@ -12,8 +12,8 @@ export default class UpdateUser extends React.Component {
     this.state = {
       input_user_id: '',
       user_name: '',
-      user_contact: '',
-      user_address: '',
+      email: '',
+      phone_num: '',
     };
   }
   searchUser = () => {
@@ -27,22 +27,22 @@ export default class UpdateUser extends React.Component {
           var len = results.rows.length;
           console.log('len',len);
           if (len > 0) {
-            console.log(results.rows.item(0).user_contact);
+            console.log(results.rows.item(0).email);
             this.setState({
              user_name:results.rows.item(0).user_name,
             });
             this.setState({
-             user_contact:results.rows.item(0).user_contact,
+             email:results.rows.item(0).email,
             });
             this.setState({
-             user_address:results.rows.item(0).user_address,
+             phone_num:results.rows.item(0).phone_num,
             });
           }else{
             alert('No user found');
             this.setState({
               user_name:'',
-              user_contact:'',
-              user_address:'',
+              email:'',
+              phone_num:'',
             });
           }
         }
@@ -53,15 +53,15 @@ export default class UpdateUser extends React.Component {
     var that=this;
     const { input_user_id } = this.state;
     const { user_name } = this.state;
-    const { user_contact } = this.state;
-    const { user_address } = this.state;
+    const { email } = this.state;
+    const { phone_num } = this.state;
     if (user_name){
-      if (user_contact){
-        if (user_address){
+      if (email){
+        if (phone_num){
           db.transaction((tx)=> {
             tx.executeSql(
-              'UPDATE table_user set user_name=?, user_contact=? , user_address=? where user_id=?',
-              [user_name, user_contact, user_address, input_user_id],
+              'UPDATE table_user set user_name=?, email=? , phone_num=? where user_id=?',
+              [user_name, email, phone_num, input_user_id],
               (tx, results) => {
                 console.log('Results',results.rowsAffected);
                 if(results.rowsAffected>0){
@@ -78,13 +78,13 @@ export default class UpdateUser extends React.Component {
             );
           });
         }else{
-          alert('Please fill Address');
+          alert('Please fill Phone Number');
         }
       }else{
-        alert('Please fill Contact Number');
+        alert('Please fill email');
       }
     }else{
-      alert('Please fill Name');
+      alert('Please fill User Name');
     }
   };
 
@@ -109,20 +109,20 @@ export default class UpdateUser extends React.Component {
               onChangeText={user_name => this.setState({ user_name })}
             />
             <Mytextinput
-              placeholder="Enter Contact No"
-              value={''+ this.state.user_contact}
-              onChangeText={user_contact => this.setState({ user_contact })}
-              maxLength={10}
-              keyboardType="numeric"
-            />
-            <Mytextinput
-              value={this.state.user_address}
-              placeholder="Enter Address"
-              onChangeText={user_address => this.setState({ user_address })}
-              maxLength={225}
+              placeholder="Enter email"
+              value={''+ this.state.email}
+              onChangeText={email => this.setState({ email })}
+              maxLength={20}
               numberOfLines={5}
               multiline={true}
               style={{textAlignVertical : 'top'}}
+            />
+            <Mytextinput
+              value={this.state.phone_num}
+              placeholder="Enter Phone Number"
+              onChangeText={phone_num => this.setState({ phone_num })}
+              keyboardType="numeric"
+              maxLength={10}
             />
             <Mybutton
               title="Update User"

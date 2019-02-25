@@ -2,7 +2,7 @@
 import React from 'react';
 import { ListView, Text, View } from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
-var db = openDatabase({ name: 'UserDatabase.db' });
+var db = openDatabase({ name: 'UserData.db' });
 
 export default class ViewAllUser extends React.Component {
   constructor(props) {
@@ -40,8 +40,8 @@ export default class ViewAllUser extends React.Component {
             <View style={{ backgroundColor: 'white', padding: 20 }}>
               <Text>Id: {rowData.user_id}</Text>
               <Text>Name: {rowData.user_name}</Text>
-              <Text>Contact: {rowData.user_contact}</Text>
-              <Text>Address: {rowData.user_address}</Text>
+              <Text>Email: {rowData.email}</Text>
+              <Text>Phone Number: {rowData.phone_num}</Text>
             </View>
           )}
         />

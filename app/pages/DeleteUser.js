@@ -5,7 +5,7 @@ import Mytextinput from './components/Mytextinput';
 import Mybutton from './components/Mybutton';
 
 import { openDatabase } from 'react-native-sqlite-storage';
-var db = openDatabase({ name: 'UserDatabase.db' });
+var db = openDatabase({ name: 'UserData.db' });
 export default class UpdateUser extends React.Component {
   constructor(props) {
     super(props);
