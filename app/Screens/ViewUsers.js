@@ -2,7 +2,7 @@
 import React from 'react';
 import { ListView, Text, View } from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
-var db = openDatabase({ name: 'UserData.db' });
+var db = openDatabase({ name: 'UserDatabase.db' });
 
 export default class ViewAllUser extends React.Component {
   constructor(props) {
@@ -27,7 +27,7 @@ export default class ViewAllUser extends React.Component {
   }
   ListViewItemSeparator = () => {
     return (
-      <View style={{ height: 0.5, width: '100%', backgroundColor: '#000' }} />
+      <View style={{ height: 0.5, width: '100%', backgroundColor: 'black' }} />
     );
   };
   render() {
@@ -38,10 +38,8 @@ export default class ViewAllUser extends React.Component {
           renderSeparator={this.ListViewItemSeparator}
           renderRow={rowData => (
             <View style={{ backgroundColor: 'white', padding: 20 }}>
-              <Text>Id: {rowData.user_id}</Text>
-              <Text>Name: {rowData.user_name}</Text>
+              <Text>User Name: {rowData.user_name}</Text>
               <Text>Email: {rowData.email}</Text>
-              <Text>Phone Number: {rowData.phone_num}</Text>
             </View>
           )}
         />

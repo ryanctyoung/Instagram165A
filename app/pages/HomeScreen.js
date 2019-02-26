@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import Mybutton from './components/Mybutton';
 import Mytext from './components/Mytext';
 import { openDatabase } from 'react-native-sqlite-storage';
-var db = openDatabase({ name: 'UserDatabase.db' });
+var db = openDatabase({ name: 'UserData.db' });
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -18,7 +18,7 @@ export default class HomeScreen extends React.Component {
           if (res.rows.length == 0) {
             txn.executeSql('DROP TABLE IF EXISTS table_user', []);
             txn.executeSql(
-              'CREATE TABLE IF NOT EXISTS table_user(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20), user_contact INT(10), user_address VARCHAR(255))',
+              'CREATE TABLE IF NOT EXISTS table_user(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20), first_name VARCHAR(20), last_name VARCHAR(20), email VARCHAR(50), password VARCHAR(50), DOB INT (20), phone_num INT (20))',
               []
             );
           }

@@ -150,7 +150,7 @@ class RegisterScreen extends Component{
             []
           );
           tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS followers(followedID INTEGER, followerID INTEGER, date INTEGER default 0, UNIQUE (followedID, followerID, date))',
+            'CREATE TABLE IF NOT EXISTS followers(followedID INTEGER, followerID INTEGER, UNIQUE (followedID, followerID))',
             []
           );
 

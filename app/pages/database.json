@@ -1,0 +1,20 @@
+{
+    "database": {"name" : "users.db"},
+
+    "tables": 
+    {
+      "users": "user_table",
+      "follow": "follower_table",
+    },
+
+    "user_columns": {
+      "uid": "user_id",
+      "user_name": "user_name",
+
+    },
+
+    "follow_columns": {
+      "uid": "followedID",
+      "fid": "followerID",
+    },
+}

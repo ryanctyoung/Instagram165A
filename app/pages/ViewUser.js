@@ -6,7 +6,7 @@ import Mytextinput from './components/Mytextinput';
 import Mybutton from './components/Mybutton';
 
 import { openDatabase } from 'react-native-sqlite-storage';
-var db = openDatabase({ name: 'UserDatabase.db' });
+var db = openDatabase({ name: 'UserData.db' });
 
 export default class ViewUser extends React.Component {
   constructor(props) {
@@ -54,8 +54,8 @@ export default class ViewUser extends React.Component {
         <View style={{ marginLeft: 35, marginRight: 35, marginTop: 10 }}>
           <Text>User Id: {this.state.userData.user_id}</Text>
           <Text>User Name: {this.state.userData.user_name}</Text>
-          <Text>User Contact: {this.state.userData.user_contact}</Text>
-          <Text>User Address: {this.state.userData.user_address}</Text>
+          <Text>User email: {this.state.userData.email}</Text>
+          <Text>User Phone number: {this.state.userData.phone_num}</Text>
         </View>
       </View>
     );

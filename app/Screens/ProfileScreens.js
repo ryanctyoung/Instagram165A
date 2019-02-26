@@ -4,6 +4,7 @@ import {NavigationActions, StackActions} from 'react-navigation';
 import {openDatabase} from 'react-native-sqlite-storage';
 import {database} from "../App.js";
 import {styles} from '../StyleSheet.js';
+import {Follow,GetCurrUser} from '../App.js'
 
 export {ProfileScreen, EditScreen} 
 
@@ -13,6 +14,7 @@ class ProfileScreen extends Component{
       super(props);
         this.state = {
         //get follow amount here
+        currUser: GetCurrUser().uid,
         uid: this.props.navigation.state.params.uid,
         user_name : this.props.navigation.state.params.user_name,
         pho_num : this.props.navigation.state.params.pho_num,
@@ -23,6 +25,7 @@ class ProfileScreen extends Component{
     render() {
       const handlePress = () => false
      // const {user_name} = this.state
+      const{currUser} = this.state
       const {pho_num} = this.state
       const { navigate } = this.props.navigation
       const {user_name} = this.state
@@ -30,36 +33,46 @@ class ProfileScreen extends Component{
       
       const {uid} = this.state
 
-    navigatePress = () => 
+    ProfileVariance = () =>
     {
       if(uid == currUser)
       {
-        navigate('Edit')
+        return(
+          <View style={styles.wrapper}>
+           
+           <Button block style={styles.button} onPress={()=> navigate('Edit')} title ={ 'Edit Profile'}/>
+           <Button block style={styles.button} title ={ 'Upload'}/>
+            <Text style = {styles.bio}> {pho_num} </Text>
+        </View>
+          );
       }
-      else //follower query HERE
+      else
       {
-        //INSERT (currUser,today's date) into Users u.follow where SELECT Users u where u.uid == uid
-        db.transaction(function(tx) {
-          tx.executeSql('INSERT INTO followers (followerID, followedID) VALUES (?,?)', [userTuple.uid, uid])  
-          });
-
-        }
+        return(
+          <View style={styles.wrapper}>
+           
+           <Button block style={styles.button} onPress={()=> Follow(uid)} title ={ 'Follow'}/>
+            <Text style = {styles.bio}> {currUser} </Text>
+          </View>
+          );
+      }
     }
+
        return (
         <View style={styles.wrapper}>
           <Text> {user_name}'s Profile </Text>
             <Text style={styles.profiledetail}> {this.state.followers} </Text>
            <Text style={styles.profiledetail}> Followers </Text>
            
-           <Button block style={styles.button} onPress={navigatePress} title ={ uid == currUser ? 'Edit Profile' : 'Follow'}/>
-            <Text style = {styles.bio}> {pho_num} </Text>
+           <ProfileVariance />
    
-          <Text> Hello {user_name}!!! </Text>    
-           <Text> my phone number is {pho_num}</Text>   
+          <Text> Hello {user_name}!!! </Text>  
         </View>
       )
     }
 }
+
+
 
 class EditScreen extends Component{
     constructor(props) {
