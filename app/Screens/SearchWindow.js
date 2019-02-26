@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {FlatList, Platform, StyleSheet, Text, View, Button, TextInput, } from 'react-native';
 import {openDatabase} from 'react-native-sqlite-storage';
-
+import {GetCurrUser} from '../App.js'
 
 var db = openDatabase({name:'users.db'});
 export default class SearchWindow extends Component
@@ -18,14 +18,11 @@ export default class SearchWindow extends Component
 
   searchUser = () => {
     const { input_user_id } = this.state;
-    
-
-
     console.log(this.state.input_user_id);
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT * FROM users where user_name = ?',
-        [input_user_id],
+        'SELECT * FROM users where user_name = ? AND user_name != ?',
+        [input_user_id, GetCurrUser().user_name],
         (tx, results) => {
           var len = results.rows.length;
           console.log('len', len);

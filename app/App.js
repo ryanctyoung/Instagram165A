@@ -11,6 +11,7 @@ import {styles} from './StyleSheet.js';
 import {HomeScreen, LoginScreen, RegisterScreen} from './Screens/HomeLogin.js'
 import {ProfileScreen, EditScreen} from './Screens/ProfileScreens.js';
 import FeedScreen from './Screens/FeedScreen';
+import PostScreen from './Screens/PostScreen';
 import SearchWindow from './Screens/SearchWindow';
 
 //export {Database, currUser, userTuple};
@@ -18,8 +19,7 @@ import SearchWindow from './Screens/SearchWindow';
 ;
 var database = {name:'users.db'};
 var db = openDatabase({name:'users.db'});
-var userTuple = {uid: -1,  user_name:'AGGIE', bio:'', followers: 0};
-var currUser = -1;
+var userTuple = {uid: 1,  user_name:'AGGIE', followers: 0}
 
 /*class Database
 {
@@ -28,14 +28,18 @@ var currUser = -1;
     return openDatabase({ name: 'users.db' });
   }
 }*/
-export{db as database, Follow, GetCurrUser};
+export{db as database, Follow, GetCurrUser, Login};
 
 const GetCurrUser = () =>
 {
-  userTuple.uid = 1;
+  
   return userTuple;
 }
 
+const Login = (loggedUser) =>
+{
+  userTuple = loggedUser;
+}
 const Follow = (followid) =>
 {
   db.transaction(function(tx)
@@ -52,17 +56,17 @@ const Follow = (followid) =>
 }
 
 
+
 const ProfileStack = createStackNavigator(
   {
     Profile: ProfileScreen,
     Edit: EditScreen,
-
+    Post: PostScreen,
 
   },
 
     {
     initialRouteName: 'Profile',
-    initialRouteParams: {uid: 1},
   }
 );
 
@@ -72,7 +76,8 @@ const ProfileStack = createStackNavigator(
 const SearchStack = createStackNavigator(
   {
     Search: SearchWindow,
-    Profile: ProfileScreen,
+    Profile: ProfileStack,
+
   },
   {
     mode: 'modal',
@@ -83,7 +88,8 @@ const SearchStack = createStackNavigator(
 const FeedStack = createStackNavigator(
   {
     Feed: FeedScreen,
-    //Profile: ProfileStack,
+    Profile: ProfileStack,
+    Post: {screen:ProfileStack, },
     Search: SearchStack,
   },
   {
@@ -99,8 +105,8 @@ const TabNavigator = createBottomTabNavigator(
     Profile: {screen: ProfileStack, 
       navigationOptions: () => ({
       tabBarOnPress:({navigation, defaultHandler}) => {
-        navigation.setParams({uid:currUser, user_name:userTuple.user_name, pho_num:0});
-        navigation.navigate('Profile', {uid:1, user_name:userTuple.user_name, pho_num:0});
+        navigation.setParams({uid:userTuple.uid, user_name:userTuple.user_name, pho_num:0});
+        navigation.navigate('Profile', {uid:userTuple.uid, user_name:userTuple.user_name, pho_num:0});
         
       },
 
@@ -126,7 +132,7 @@ const EntryStack = createSwitchNavigator(
   },
   {
     initialRouteName: 'Home',
-    initialRouteParams: {uid: 1},
+    initialRouteParams: {uid: userTuple.uid},
   }
 );
 

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Button, TextInput, } from 'react-native';
 import {NavigationActions, StackActions} from 'react-navigation';
 import {openDatabase} from 'react-native-sqlite-storage';
-import {database} from "../App.js";
+import {database, Login} from "../App.js";
 import {styles} from '../StyleSheet.js';
 
 export {HomeScreen, LoginScreen, RegisterScreen} 
@@ -13,8 +13,7 @@ class HomeScreen extends Component{
     constructor(props)
     {
       super(props); 
-      this.state = {uid:this.props.navigation.state.params.uid};
-      currUser = this.state.uid;
+      this.state = {uid:this.props.navigation.state.params.uid, };
 
     }    
     
@@ -32,10 +31,11 @@ class HomeScreen extends Component{
               (tx,results) => {
                 if(results.rows.length > 0)
                 {
-                  currUser = x;
+                  
                   userName = results.rows.item(0).user_name;
                   phoNum = results.rows.item(0).phoneNum;
-                  navigate('App', {uid: currUser, user_name: userName, pho_num:phoNum});
+                  Login({uid:x,user_name:userName, followers: 0});
+                  navigate('App', {uid: x, user_name: userName, pho_num:phoNum});
                 }
                 else
                 {
@@ -58,7 +58,7 @@ class HomeScreen extends Component{
     }
     
 
-    if(currUser >= 0) profilePress(currUser)
+    if(this.state.uid >= 0) profilePress(this.state.uid)
 
     return (
       <View style={styles.container}>
@@ -100,6 +100,7 @@ class LoginScreen extends Component{
                 currUser = results.rows.item(0).user_id;
                 userName = results.rows.item(0).user_name;
                 phoNum = results.rows.item(0).phoneNum;
+                Login({uid:currUser,user_name:userName, followers: 0});
                 navigate('App', {uid: currUser, user_name: userName, pho_num:phoNum});
                 //reset([NavigationActions.navigate({routeName : 'App'})] , 0 );
               }

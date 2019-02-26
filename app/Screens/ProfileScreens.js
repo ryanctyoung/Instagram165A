@@ -1,15 +1,34 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Button, TextInput, } from 'react-native';
+import {Platform, StyleSheet, Text, View, Button, TextInput, Image, FlatList, TouchableHighlight,} from 'react-native';
 import {NavigationActions, StackActions} from 'react-navigation';
 import {openDatabase} from 'react-native-sqlite-storage';
 import {database} from "../App.js";
 import {styles} from '../StyleSheet.js';
 import {Follow,GetCurrUser} from '../App.js'
+import * as  ImagePicker  from 'react-native-image-picker';
 
 export {ProfileScreen, EditScreen} 
 
 var db = openDatabase({name:'users.db'});
 class ProfileScreen extends Component{
+
+    RetrievePosts(){
+      var temp = [];
+      db.transaction(function(tx) {
+
+        /*
+        for(let i = 0; i < results.rows.length; ++i)
+        {
+            temp.push(results.rows.item[i]);
+        }
+
+        */
+      });
+      this.setState({
+        posts:temp
+      });
+    }
+
     constructor(props) {
       super(props);
         this.state = {
@@ -18,9 +37,11 @@ class ProfileScreen extends Component{
         uid: this.props.navigation.state.params.uid,
         user_name : this.props.navigation.state.params.user_name,
         pho_num : this.props.navigation.state.params.pho_num,
+        posts:[],
         followers: 0,
         following: 0,   
     }
+    this.RetrievePosts();
 };   
     render() {
       const handlePress = () => false
@@ -30,7 +51,7 @@ class ProfileScreen extends Component{
       const { navigate } = this.props.navigation
       const {user_name} = this.state
       const mail= this.props.navigation.state.params.mail
-      
+      const {posts} = this.state
       const {uid} = this.state
 
     ProfileVariance = () =>
@@ -42,7 +63,7 @@ class ProfileScreen extends Component{
            
            <Button block style={styles.button} onPress={()=> navigate('Edit')} title ={ 'Edit Profile'}/>
            <Button block style={styles.button} title ={ 'Upload'}/>
-            <Text style = {styles.bio}> {pho_num} </Text>
+            <Text style = {styles.bio}> {currUser} </Text>
         </View>
           );
       }
@@ -52,11 +73,43 @@ class ProfileScreen extends Component{
           <View style={styles.wrapper}>
            
            <Button block style={styles.button} onPress={()=> Follow(uid)} title ={ 'Follow'}/>
-            <Text style = {styles.bio}> {currUser} </Text>
+            <Text style = {styles.bio}> {currUser} {uid} </Text>
           </View>
           );
       }
     }
+
+    
+
+    PostItem = (postID, photoID) => {
+
+
+      src = '';
+      return(
+        <TouchableHighlight onPress={()=>PostNavigate(postID)}>
+        <Image source = {src} style={{ width: 300, height: 300 }}/>
+        </TouchableHighlight>
+        );
+    }
+
+
+
+    PostNavigate = (postID) => {
+      navigate(Post, {postID:postID});
+    }
+
+
+
+    PostLibrary = () =>
+    {
+      return(
+          <View>
+          <FlatList data= {posts} horizontal={true} renderItem = {({item}) => PostItem(item.postID,item.photoID)} />
+          </View>
+        );
+    }
+
+
 
        return (
         <View style={styles.wrapper}>
@@ -64,8 +117,8 @@ class ProfileScreen extends Component{
             <Text style={styles.profiledetail}> {this.state.followers} </Text>
            <Text style={styles.profiledetail}> Followers </Text>
            
-           <ProfileVariance />
-   
+          <ProfileVariance />
+          <PostLibrary/>
           <Text> Hello {user_name}!!! </Text>  
         </View>
       )
@@ -125,3 +178,8 @@ class EditScreen extends Component{
     );
   }
 }
+
+const profileUI = StyleSheet.create(
+{
+
+});
