@@ -11,7 +11,7 @@ import {styles} from './StyleSheet.js';
 import {HomeScreen, LoginScreen, RegisterScreen} from './Screens/HomeLogin.js'
 import {ProfileScreen, EditScreen} from './Screens/ProfileScreens.js';
 import FeedScreen from './Screens/FeedScreen';
-import PostScreen from './Screens/PostScreen';
+import {PostScreen,CreatePost} from './Screens/PostScreen';
 import SearchWindow from './Screens/SearchWindow';
 
 //export {Database, currUser, userTuple};
@@ -19,7 +19,7 @@ import SearchWindow from './Screens/SearchWindow';
 ;
 var database = {name:'users.db'};
 var db = openDatabase({name:'users.db'});
-var userTuple = {uid: 1,  user_name:'AGGIE', followers: 0}
+var userTuple = {uid: -1,  user_name:'AGGIE', followers: 0}
 
 /*class Database
 {
@@ -28,7 +28,7 @@ var userTuple = {uid: 1,  user_name:'AGGIE', followers: 0}
     return openDatabase({ name: 'users.db' });
   }
 }*/
-export{db as database, Follow, GetCurrUser, Login};
+export{db as database, GetCurrUser, Login};
 
 const GetCurrUser = () =>
 {
@@ -40,20 +40,19 @@ const Login = (loggedUser) =>
 {
   userTuple = loggedUser;
 }
-const Follow = (followid) =>
-{
-  db.transaction(function(tx)
-  {
-    tx.executeSql('INSERT IF NOT EXISTS INTO follow (uid, follower_uid) VALUES (?, ?)', [currUser,followid], 
-      (tx,results) => 
-      {
 
-      }
-      )
-  }
-    );
-  
+
+const PostStack = createStackNavigator(
+{ 
+  Create:CreatePost,
+    Post: PostScreen,
+    
+},
+{
+  //initialRouteName :"Post",
+  //initialRouteParams:{postID:this.props.navigation.params.postID},
 }
+  );
 
 
 
@@ -61,12 +60,11 @@ const ProfileStack = createStackNavigator(
   {
     Profile: ProfileScreen,
     Edit: EditScreen,
-    Post: PostScreen,
+    PostStack: PostStack,
 
   },
-
-    {
-    initialRouteName: 'Profile',
+  {
+    header:null,
   }
 );
 
@@ -89,7 +87,7 @@ const FeedStack = createStackNavigator(
   {
     Feed: FeedScreen,
     Profile: ProfileStack,
-    Post: {screen:ProfileStack, },
+    PostStack: PostStack,
     Search: SearchStack,
   },
   {
@@ -141,6 +139,26 @@ const EntryStack = createSwitchNavigator(
 const AppContainer = createAppContainer(EntryStack);
 type Props = {};
 export default class App extends Component<Props> {
+  
+  constructor(props)
+  {
+    super(props);
+    db.transaction(function(tx) 
+    {
+      //Post
+      tx.executeSql("DROP TABLE IF EXISTS post", []);
+      tx.executeSql("CREATE TABLE IF NOT EXISTS post(timestamp TEXT,\
+        post_id INTEGER AUTOINCREMENT ,\
+        uid INTEGER,\
+        picture_id INTEGER,\
+        PRIMARY KEY (post_id),\
+        FOREIGN KEY (uid) REFERENECES users,\
+        FOREIGN KEY (picture_id) REFERENCES photo)");
+    }
+
+      );
+  }
+
   render() {
     const handlePress = () => false
     return <AppContainer />;

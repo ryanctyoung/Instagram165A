@@ -4,16 +4,19 @@ import {NavigationActions, StackActions} from 'react-navigation';
 import {openDatabase} from 'react-native-sqlite-storage';
 import {database} from "../App.js";
 import {styles} from '../StyleSheet.js';
-import {Follow,GetCurrUser} from '../App.js'
+import {GetCurrUser} from '../App.js'
 import * as  ImagePicker  from 'react-native-image-picker';
 
 export {ProfileScreen, EditScreen} 
 
 var db = openDatabase({name:'users.db'});
+
 class ProfileScreen extends Component{
 
+
+
     RetrievePosts(){
-      var temp = [];
+      var temp = [{uid:1, postID:1, photoID:1}];
       db.transaction(function(tx) {
 
         /*
@@ -29,6 +32,38 @@ class ProfileScreen extends Component{
       });
     }
 
+    RetrieveFollow()
+    {
+      
+
+      db.transaction(tx => {
+        var temp1 = 0;
+      var temp2 = 0;
+        tx.executeSql(
+          'SELECT * FROM followers F, users U WHERE U.user_id = F.uid AND U.user_id = ?',[this.state.uid],
+          (tx,results) => {
+            console.log("Followerlog = " + results.rows.length );
+            this.setState({
+            following:results.rows.length ,
+            });
+          }
+          );
+
+        tx.executeSql(
+          'SELECT * FROM followers F, users U WHERE U.user_id = F.follower_id AND U.user_id = ?',[this.state.uid],
+          (tx,results) => {
+            this.setState({
+            followers:results.rows.length ,
+            });
+          }
+          );
+        
+
+      });
+
+      
+    }
+
     constructor(props) {
       super(props);
         this.state = {
@@ -41,11 +76,16 @@ class ProfileScreen extends Component{
         followers: 0,
         following: 0,   
     }
-    this.RetrievePosts();
+    
 };   
+
+    componentDidMount()
+    {
+      this.RetrievePosts();
+      console.log("componentDidMount");
+      this.RetrieveFollow();
+    }
     render() {
-      const handlePress = () => false
-     // const {user_name} = this.state
       const{currUser} = this.state
       const {pho_num} = this.state
       const { navigate } = this.props.navigation
@@ -53,6 +93,30 @@ class ProfileScreen extends Component{
       const mail= this.props.navigation.state.params.mail
       const {posts} = this.state
       const {uid} = this.state
+     const Follow = () =>
+    {
+      
+      db.transaction(function(tx){
+      tx.executeSql('INSERT INTO followers(uid, follower_id) VALUES(?,?)',[currUser,uid],
+              (tx,results) => {
+                if(results.rowsAffected > 0)
+                {
+                  console.log("Follow press by ? to ?", [currUser,uid]);
+                }
+                       
+              }
+              
+    );
+  
+    });
+      this.RetrieveFollow();
+    }
+
+      const handlePress = () => false
+     // const {user_name} = this.state
+      
+
+
 
     ProfileVariance = () =>
     {
@@ -62,7 +126,7 @@ class ProfileScreen extends Component{
           <View style={styles.wrapper}>
            
            <Button block style={styles.button} onPress={()=> navigate('Edit')} title ={ 'Edit Profile'}/>
-           <Button block style={styles.button} title ={ 'Upload'}/>
+           <Button block style={styles.button} onPress={()=> navigate('Create') } title ={ 'Upload Post'}/>
             <Text style = {styles.bio}> {currUser} </Text>
         </View>
           );
@@ -70,9 +134,9 @@ class ProfileScreen extends Component{
       else
       {
         return(
-          <View style={styles.wrapper}>
+          <View style={profileUI.wrapper}>
            
-           <Button block style={styles.button} onPress={()=> Follow(uid)} title ={ 'Follow'}/>
+           <Button block style={styles.button} onPress={()=> Follow()} title ={ 'Follow'}/>
             <Text style = {styles.bio}> {currUser} {uid} </Text>
           </View>
           );
@@ -83,18 +147,24 @@ class ProfileScreen extends Component{
 
     PostItem = (postID, photoID) => {
 
-
-      src = '';
-      return(
+      /*
         <TouchableHighlight onPress={()=>PostNavigate(postID)}>
         <Image source = {src} style={{ width: 300, height: 300 }}/>
         </TouchableHighlight>
+      */
+      //
+      src = './test.png';
+      return(
+        <Image  style={{ width: 300, height: 300 }}/>
         );
     }
 
 
 
     PostNavigate = (postID) => {
+
+
+
       navigate(Post, {postID:postID});
     }
 
@@ -112,11 +182,23 @@ class ProfileScreen extends Component{
 
 
        return (
-        <View style={styles.wrapper}>
+        <View style={profileUI.wrapper}>
           <Text> {user_name}'s Profile </Text>
-            <Text style={styles.profiledetail}> {this.state.followers} </Text>
-           <Text style={styles.profiledetail}> Followers </Text>
-           
+            
+            <View style={profileUI.followStats} >
+
+            <View >
+            <Text style={profileUI.profiledetail}> {this.state.followers} </Text>
+           <Text style={profileUI.profiledetail}> Followers </Text>
+           </View>
+
+           <View>
+            <Text style={profileUI.profiledetail}> {this.state.following} </Text>
+           <Text style={profileUI.profiledetail}> Following </Text>
+           </View>
+
+           </View>
+          
           <ProfileVariance />
           <PostLibrary/>
           <Text> Hello {user_name}!!! </Text>  
@@ -166,9 +248,9 @@ class EditScreen extends Component{
         });
     };
     return (
-      <View style={styles.wrapper}>
+      <View style={profileUI.wrapper}>
             <Text style={styles.register}>user name</Text>
-            <TextInput style={styles.register} placeholder="Please enter your email" onChangeText={user_name => this.setState({ user_name })}/>
+            <TextInput style={styles.register} placeholder="Please enter your username" onChangeText={user_name => this.setState({ user_name })}/>
             <Text style={styles.register}>Email</Text>
             <TextInput style={styles.register}placeholder="Please enter your email" onChangeText={email => this.setState({ email })}/>
             <Text style={styles.register}>Phone Number</Text>
@@ -181,5 +263,22 @@ class EditScreen extends Component{
 
 const profileUI = StyleSheet.create(
 {
+    wrapper: {
+    flex: 1,
+    backgroundColor: 'lightblue',
+  },
 
+    followStats:{
+      borderEndWidth:-10,
+      justifyContent: 'center',
+      alignContent:'flex-start',
+      flexDirection:'row',
+    },
+    profiledetail: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    padding: 0,
+    marginLeft: 20,
+  },
 });

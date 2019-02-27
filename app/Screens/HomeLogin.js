@@ -27,6 +27,7 @@ class HomeScreen extends Component{
           var phoNum = 0;
         db.transaction(function(tx)
           {
+            console.log("HOMESCREENECHEK");
             tx.executeSql('SELECT user_name, phoneNum FROM users WHERE user_id = ? ',[x],
               (tx,results) => {
                 if(results.rows.length > 0)
@@ -42,9 +43,9 @@ class HomeScreen extends Component{
                   userName = 'Error'; 
                 }         
               }
-              );      
-          });
-    }
+              ); 
+    },)
+      }
 
     function HomeOptions(props)
     {
@@ -144,14 +145,14 @@ class RegisterScreen extends Component{
       const { DOB } = this.state;
       const { phoneNum } = this.state;
       db.transaction(function(tx) {
-          tx.executeSql('DROP TABLE IF EXISTS users', []);
+          tx.executeSql('DROP TABLE IF EXISTS followers', []);
 
           tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20), FirstName VARCHAR(20), LastName VARCHAR(20), email VARCHAR(20), password VARCHAR(20), DOB INTEGER DEFAULT 0, phoneNum INTEGER DEFAULT 0)',
+            'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20) UNIQUE, FirstName VARCHAR(20), LastName VARCHAR(20), email VARCHAR(20), password VARCHAR(20), DOB INTEGER DEFAULT 0, phoneNum INTEGER DEFAULT 0)',
             []
           );
           tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS followers(followedID INTEGER, followerID INTEGER, UNIQUE (followedID, followerID))',
+            'CREATE TABLE IF NOT EXISTS followers(uid INTEGER, follower_id INTEGER, UNIQUE (uid, follower_id))',
             []
           );
 
@@ -159,15 +160,25 @@ class RegisterScreen extends Component{
             'INSERT INTO users(user_name, FirstName, LastName, email, password, DOB, phoneNum) VALUES (?,?,?,?,?,?,?)',
             [user_name, FirstName, LastName, email,password, DOB, phoneNum],
             (tx, results) => {
-              console.log('Results, ' + results.rowsAffected + user_name + FirstName + LastName + email + password + DOB + phoneNum);
-              userTuple.user_name = user_name;
-              userTuple.uid = results.insertID;
-              navigate('Home');
+              if(results.rowsAffected > 0)
+              {
+                tx.executeSql(
+              'SELECT * FROM users WHERE user_name = ?',[user_name],(tx,results) => {
+                if(results.rows.length > 0)
+                {
+                  Login({uid:results.rows.item(0).user_id,user_name:user_name, followers: 0});
+                  navigate('Home'); 
+                }
+               
+              }
+              );
+              }
+              
             }); 
   })
 };
     return (
-        <View>
+        <View style={styles.container}>
           <Text style={styles.register}>User name</Text>
             <TextInput style={styles.register} placeholder="Please Enter Your user name" onChangeText={user_name=> this.setState({ user_name })} />
             <Text style={styles.register}>First Name</Text>

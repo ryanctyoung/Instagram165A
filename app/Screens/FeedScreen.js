@@ -11,7 +11,12 @@ export default class FeedScreen extends Component{
   {
     var temp = [];
       db.transaction(function(tx) {
+        tx.executeSql(
+          '',[],
+          (tx,results) =>{
 
+          }
+          );
         /*
         for(let i = 0; i < results.rows.length; ++i)
         {
@@ -31,9 +36,13 @@ export default class FeedScreen extends Component{
     this.state = {
       posts:[],
     };
+
   }
 
-
+  componentDidMount()
+    {
+      //this.RetrievePosts();
+    }
 
 
   render()
@@ -50,7 +59,7 @@ export default class FeedScreen extends Component{
 
       return (
         <View>
-        <FlatList data = {[posts]} renderItem = {(item)=>PostItem(item)} />
+        <FlatList data = {posts} renderItem = {(item)=>PostItem(item)} />
         </View>
         );
     }

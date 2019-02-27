@@ -58,13 +58,7 @@ submitButton: {
   },
 
     
-  profiledetail: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    overflow: 'hidden',
-    padding: 0,
-    marginLeft: 140,
-  },
+  
 
 
   bio: {
