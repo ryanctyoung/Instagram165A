@@ -32,7 +32,7 @@ class PostScreen extends Component{
 		}
 		return(<View>
 
-		</View>); 
+		</View>); //
 	};
 
 }
@@ -44,6 +44,7 @@ class CreatePost extends Component{
 		this.state = {
 			description:'',
 			photos:[],
+			uid:this.props.navigation.params.uid,
 		};
 	}
 
@@ -51,24 +52,46 @@ class CreatePost extends Component{
 
 	render()
 	{
-		const {navigate} = this.props.navigation;
+		const {goBack} = this.props.navigation;
+		const {description} = this.state;
+		const {uid} = this.state;
 		const SubmitPost = () =>
 		{
+			
+			console.log("PostCreation ");
 			db.transaction(function(tx)
 				{
-					tx.executeSql('INSERT INTO post(timestamp, picture_id, uid) VALUES ()', [0,0,GetCurrUser().uid,],
-						(tx, results) => 
-						{
-
-						}
-						);
-				});
-			this.props.navigation.goBack();
+					//var temp = GetCurrUser().uid;
+					console.log("PostCreation ");
+					tx.executeSql("INSERT INTO post(uid,caption) VALUES(?,?) ",[uid,description],
+            (tx, results) => 
+            {
+              if(results.rowsAffected > 0)
+              {
+                console.log("PostCreation ");
+              } 
+              console.log("PostCreation ");
+            }
+            );
+      tx.executeSql("SELECT * FROM post ",[],
+            (tx, results) => 
+            {
+              if(results.rows.length > 0)
+              {
+                console.log(results.rows.item(0).post_id + results.rows.item(0).caption);
+              }
+              
+              
+           		 }
+            	);
+				
+			});
+			
 		}
 		return(
 			<View>
-			<TextInput placeholder = "Description..." onChangeText = {description => this.setState({description:""})} />
-			<Button title = "Submit"/>
+			<TextInput placeholder = "Description..." onChangeText = {description => this.setState({description})} />
+			<Button onPress={() => SubmitPost()} title = "Submit"/>
 			</View>
 			);
 	}

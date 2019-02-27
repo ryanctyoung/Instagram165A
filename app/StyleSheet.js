@@ -9,7 +9,7 @@ welcomewrap: {
 wrapper: {
     flex: 1,
     marginTop: 50,
-    backgroundColor: 'lightblue',
+    backgroundColor: 'darkgray',
   },
 submitButton: {
     paddingHorizontal: 10,
@@ -21,7 +21,7 @@ submitButton: {
     justifyContent: 'center',
     alignItems: 'center',
     color: 'yellow',
-    backgroundColor: 'lightblue',
+    backgroundColor: 'darkgray',
   },
   welcome: {
     fontSize: 50,
@@ -32,7 +32,7 @@ submitButton: {
     marginBottom:  175,
   },
   register: {
-    fontSize: 15,
+    fontSize: 30,
     color: 'yellow',
     textAlign: 'left',
     margin: 1,

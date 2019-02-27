@@ -91,7 +91,7 @@ const feedUI = StyleSheet.create(
   {
     wrapper : {
       flex: 1,
-      backgroundColor: 'lightblue',
+      backgroundColor: 'black',
     },
 
     label:{

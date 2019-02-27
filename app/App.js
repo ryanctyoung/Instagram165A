@@ -19,7 +19,7 @@ import SearchWindow from './Screens/SearchWindow';
 ;
 var database = {name:'users.db'};
 var db = openDatabase({name:'users.db'});
-var userTuple = {uid: -1,  user_name:'AGGIE', followers: 0}
+var userTuple = {uid: 2,  user_name:'AGGIE', followers: 0}
 
 /*class Database
 {
@@ -30,7 +30,7 @@ var userTuple = {uid: -1,  user_name:'AGGIE', followers: 0}
 }*/
 export{db as database, GetCurrUser, Login};
 
-const GetCurrUser = () =>
+ function GetCurrUser()
 {
   
   return userTuple;
@@ -140,24 +140,7 @@ const AppContainer = createAppContainer(EntryStack);
 type Props = {};
 export default class App extends Component<Props> {
   
-  constructor(props)
-  {
-    super(props);
-    db.transaction(function(tx) 
-    {
-      //Post
-      tx.executeSql("DROP TABLE IF EXISTS post", []);
-      tx.executeSql("CREATE TABLE IF NOT EXISTS post(timestamp TEXT,\
-        post_id INTEGER AUTOINCREMENT ,\
-        uid INTEGER,\
-        picture_id INTEGER,\
-        PRIMARY KEY (post_id),\
-        FOREIGN KEY (uid) REFERENECES users,\
-        FOREIGN KEY (picture_id) REFERENCES photo)");
-    }
 
-      );
-  }
 
   render() {
     const handlePress = () => false

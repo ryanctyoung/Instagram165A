@@ -16,17 +16,29 @@ class ProfileScreen extends Component{
 
 
     RetrievePosts(){
-      var temp = [{uid:1, postID:1, photoID:1}];
-      db.transaction(function(tx) {
+      var temp = [];
+      db.transaction(function(tx)
+      {
 
-        /*
-        for(let i = 0; i < results.rows.length; ++i)
-        {
-            temp.push(results.rows.item[i]);
-        }
-
-        */
-      });
+        tx.executeSql("SELECT * FROM post WHERE uid = ? ",[this.state.uid],
+            (tx, results) => 
+            {
+              console.log("results.rows.item(i).caption");
+              if(results.rows.length > 0)
+              {
+                for(let i = 0; i < results.rows.length;++i)
+                {
+                  temp.push({caption:results.rows.item(i).caption});
+                  console.log(results.rows.item(i).caption + "\n");
+                }
+               
+              }
+              
+              
+               }
+              );
+      }
+        );
       this.setState({
         posts:temp
       });
@@ -126,10 +138,10 @@ class ProfileScreen extends Component{
           <View style={styles.wrapper}>
            
            <Button block style={styles.button} onPress={()=> navigate('Edit')} title ={ 'Edit Profile'}/>
-           <Button block style={styles.button} onPress={()=> navigate('Create') } title ={ 'Upload Post'}/>
-            <Text style = {styles.bio}> {currUser} </Text>
+           <Button block style={styles.button} onPress={()=> navigate('Create', {uid:currUser}) } title ={ 'Upload Post'}/>
+            
         </View>
-          );
+          );//
       }
       else
       {
@@ -137,15 +149,14 @@ class ProfileScreen extends Component{
           <View style={profileUI.wrapper}>
            
            <Button block style={styles.button} onPress={()=> Follow()} title ={ 'Follow'}/>
-            <Text style = {styles.bio}> {currUser} {uid} </Text>
           </View>
-          );
+          );//
       }
     }
 
     
 
-    PostItem = (postID, photoID) => {
+    PostItem = (caption) => {
 
       /*
         <TouchableHighlight onPress={()=>PostNavigate(postID)}>
@@ -155,8 +166,11 @@ class ProfileScreen extends Component{
       //
       src = './test.png';
       return(
-        <Image  style={{ width: 300, height: 300 }}/>
-        );
+        <View>
+        <Text style={fontSize = 40}>{caption} </Text>
+        
+        </View>
+        );//
     }
 
 
@@ -174,7 +188,7 @@ class ProfileScreen extends Component{
     {
       return(
           <View>
-          <FlatList data= {posts} horizontal={true} renderItem = {({item}) => PostItem(item.postID,item.photoID)} />
+          <FlatList data= {posts} horizontal={true} renderItem = {({item}) => PostItem(item.caption)} />
           </View>
         );
     }
@@ -183,7 +197,7 @@ class ProfileScreen extends Component{
 
        return (
         <View style={profileUI.wrapper}>
-          <Text> {user_name}'s Profile </Text>
+          <Text style={profileUI.profileTitle}> {user_name}'s Profile </Text>
             
             <View style={profileUI.followStats} >
 
@@ -265,7 +279,7 @@ const profileUI = StyleSheet.create(
 {
     wrapper: {
     flex: 1,
-    backgroundColor: 'lightblue',
+    backgroundColor: 'black',
   },
 
     followStats:{
@@ -273,12 +287,21 @@ const profileUI = StyleSheet.create(
       justifyContent: 'center',
       alignContent:'flex-start',
       flexDirection:'row',
+      color:'yellow',
     },
     profiledetail: {
     fontSize: 12,
     fontWeight: 'bold',
     overflow: 'hidden',
+    color:'yellow',
     padding: 0,
     marginLeft: 20,
+
   },
+
+    profileTitle: {
+      color:'yellow',fontSize: 40,
+    fontWeight: 'bold',
+
+    }
 });

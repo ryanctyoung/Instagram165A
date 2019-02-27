@@ -16,6 +16,24 @@ class HomeScreen extends Component{
       this.state = {uid:this.props.navigation.state.params.uid, };
 
     }    
+
+    componentDidMount()
+    {
+      
+      db.transaction(function(tx) 
+    {
+      console.log("APP constructor\n");
+      //Post
+      tx.executeSql("DROP TABLE IF EXISTS post", []);
+      tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS post( post_id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER, caption TEXT, UNIQUE (uid, post_id))',
+            []
+          );
+
+    }
+
+      );
+    }
     
     render() {
     const {uid} = this.state;
@@ -148,7 +166,7 @@ class RegisterScreen extends Component{
           tx.executeSql('DROP TABLE IF EXISTS followers', []);
 
           tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20) UNIQUE, FirstName VARCHAR(20), LastName VARCHAR(20), email VARCHAR(20), password VARCHAR(20), DOB INTEGER DEFAULT 0, phoneNum INTEGER DEFAULT 0)',
+            'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name TEXT UNIQUE, FirstName TEXT, LastName TEXT, email TEXT, password TEXT, DOB INTEGER DEFAULT 0, phoneNum INTEGER DEFAULT 0)',
             []
           );
           tx.executeSql(
