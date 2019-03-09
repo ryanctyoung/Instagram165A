@@ -44,7 +44,7 @@ class CreatePost extends Component{
 		this.state = {
 			description:'',
 			photos:[],
-			uid:this.props.navigation.params.uid,
+			uid:1 //this.props.navigation.params.uid,
 		};
 	}
 
