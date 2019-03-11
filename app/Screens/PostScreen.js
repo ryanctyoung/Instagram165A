@@ -7,6 +7,7 @@ import * as  ImagePicker  from 'react-native-image-picker';
 import GetCurrUser from '../App.js';
 import {UserContext} from '../UserContext'
 
+
 export {PostScreen, CreatePost}
 var db = openDatabase({name:'users.db'});
 class PostScreen extends Component{
