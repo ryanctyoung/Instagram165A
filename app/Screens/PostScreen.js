@@ -6,6 +6,7 @@ import {openDatabase} from 'react-native-sqlite-storage';
 import * as  ImagePicker  from 'react-native-image-picker';
 import GetCurrUser from '../App.js';
 
+
 export {PostScreen, CreatePost}
 var db = openDatabase({name:'users.db'});
 class PostScreen extends Component{

@@ -6,7 +6,7 @@ import {createDrawerNavigator, createStackNavigator, createSwitchNavigator, crea
 
 import {openDatabase} from 'react-native-sqlite-storage';
 import {styles} from './StyleSheet.js';
-
+//import HomeScreen from './pages/HomeScreen';
 
 import {HomeScreen, LoginScreen, RegisterScreen} from './Screens/HomeLogin.js'
 import {ProfileScreen, EditScreen} from './Screens/ProfileScreens.js';
@@ -16,7 +16,7 @@ import SearchWindow from './Screens/SearchWindow';
 
 //export {Database, currUser, userTuple};
 //var db = openDatabase({ name: 'users.db' });
-;
+
 var database = {name:'users.db'};
 var db = openDatabase({name:'users.db'});
 var userTuple = {uid: 2,  user_name:'AGGIE', followers: 0}

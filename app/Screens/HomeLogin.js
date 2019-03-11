@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Button, TextInput, } from 'react-native';
+import {Platform, StyleSheet, Text, View, Button, TextInput, ScrollView } from 'react-native';
 import {NavigationActions, StackActions} from 'react-navigation';
 import {openDatabase} from 'react-native-sqlite-storage';
 import {database, Login} from "../App.js";
 import {styles} from '../StyleSheet.js';
-
+import {RkButton,RkText,RkTheme,RkTextInput} from 'react-native-ui-kitten';
+import { UtilStyles } from '../style/styles';
+;
 export {HomeScreen, LoginScreen, RegisterScreen} 
 
 var db = openDatabase({name:'users.db'});
@@ -69,8 +71,18 @@ class HomeScreen extends Component{
     {
       return(
           <View>
-          <Button block style={styles.button} onPress={() => navigate('Register')} title= "Register" />
-        <Button block style={styles.button} onPress={() => navigate('Login')} title="Login" />
+            <RkButton rkType= 'rounded' style={styles.rkButtonHome}
+            contentStyle={{color: 'red'}} buttonStyle={{ width: 50 }} onPress={() => navigate('Login')}>Sign in</RkButton>
+            <View styles = {styles.bottomTest}>
+              <Button styles = {styles.bottomTest} onPress={() => navigate('Forget Password')} title="Forget Password?" />
+            </View>
+        
+            <Text style={styles.dontHave}>OR</Text>
+            <Text style={styles.dontHave}>Dont have an account? </Text>
+         
+          <Button onPress={() => navigate('Register')} title= "Register" />  
+          <Button block style={styles.button} onPress={() => navigate('Login')} title="Login" />
+          <Button block style={styles.button} onPress={() => navigate('Feed')} title="Feed" />
           </View>
           );
 
@@ -80,9 +92,17 @@ class HomeScreen extends Component{
     if(this.state.uid >= 0) profilePress(this.state.uid)
 
     return (
-      <View style={styles.container}>
-       <Text style={styles.welcome}>aggiegram</Text>
+      <View style={styles.containerHome}>
+       <Text style={styles.welcome}>AggieGram V 0. 0. 1</Text>
+       <Text style={styles.HomeLogin}>Username</Text>
+       <TextInput style={styles.HomeText} placeholder="Please Enter Your Username" onChangeText={user_name=> this.setState({ user_name })} />
+       <Text style={styles.HomeLogin}>Password</Text>
+       <TextInput style={styles.HomeText} placeholder="Please Enter Your Password" onChangeText={user_name=> this.setState({ user_name })} />
+       
+       
        <HomeOptions/>
+
+
       </View>
     );
   }
@@ -196,24 +216,94 @@ class RegisterScreen extends Component{
   })
 };
     return (
+      <ScrollView
+        style={UtilStyles.container}
+        automaticallyAdjustContentInsets={true}>
+        
         <View style={styles.container}>
-          <Text style={styles.register}>User name</Text>
-            <TextInput style={styles.register} placeholder="Please Enter Your user name" onChangeText={user_name=> this.setState({ user_name })} />
-            <Text style={styles.register}>First Name</Text>
-            <TextInput style={styles.register} placeholder="Please Enter Your First Name" onChangeText={FirstName => this.setState({ FirstName })} />
-            <Text style={styles.register}>Last Name</Text>
-            <TextInput placeholder="Please enter your Last Name" onChangeText={LastName => this.setState({ LastName})}/>
-            <Text style={styles.register}>Date of Birth (MM/DD/YYYY)</Text>
-            <TextInput placeholder="Please enter your date of birth" onChangeText={DOB => this.setState({ DOB})}/>
-            <Text style={styles.register}>Phone Number</Text>
-            <TextInput placeholder="Please enter your phone number" onChangeText={phoneNum => this.setState({ phoneNum})}/>
-            <Text style={styles.register}>Email</Text>
-            <TextInput placeholder="Please enter your email" onChangeText={email => this.setState({ email })}/>
-            <Text style={styles.register}>Password</Text>
-            <TextInput placeholder="Please enter your password" onChangeText={password => this.setState({ password })}/>
+        <Text style={styles.register}>User Name</Text>
+        <RkTextInput rkType='success' placeholder="Please Enter Your user name" onChangeText={user_name=> this.setState({ user_name })} />
+        
+        <Text style={styles.register}>First Name</Text>
+        <RkTextInput rkType='success' placeholder="Please Enter Your First Name" onChangeText={FirstName => this.setState({ FirstName })} />
+        
+        <Text style={styles.register}>Last Name</Text>
+        <RkTextInput rkType='success' placeholder="Please enter your Last Name" onChangeText={LastName => this.setState({ LastName})}/>
+            
+        <Text style={styles.register}>Date Of Birth</Text>
+        <RkTextInput rkType='success' placeholder="Please enter your date of birth" onChangeText={DOB => this.setState({ DOB})}/>
+            
+        <Text style={styles.register}>Phone Number</Text>
+        <RkTextInput rkType='success'  placeholder="Please enter your phone number" onChangeText={phoneNum => this.setState({ phoneNum})}/>
+            
+        <Text style={styles.register}>Email</Text>
+        <RkTextInput rkType='success' placeholder="Please enter your email" onChangeText={email => this.setState({ email })}/>
+        
+        <Text style={styles.register}>Password</Text>
+        <RkTextInput rkType='success'placeholder="Please enter your password" onChangeText={password => this.setState({ password })}/>
+            
+        <RkButton rkType= 'rounded' style={styles.rkButtonHome}
+            contentStyle={{color: 'red'}} buttonStyle={{ width: 50 }} onPress={() => navigate('HomeScreen')}>Register</RkButton>
 
+        <RkButton rkType= 'rounded' style={styles.rkButtonHome}
+            contentStyle={{color: 'red'}} buttonStyle={{ width: 50 }} onPress={() => navigate('HomeScreen')}>Back</RkButton>
             <Button icon="md-checkmark" iconPlacement="right" onPress={handlePress} title="Register"/>
         </View>
+        </ScrollView>
     );
   }
 }
+
+RkTheme.setType('RkTextInput','success',{
+  labelColor:'blue',
+  underlineColor:'darkgreen',
+  placeholderTextColor: 'green',
+  labelFontSize:15,
+  underlineWidth:1,
+ 
+  bottom: 70,
+  input:{backgroundColor: 'black',color: 'red'}
+});
+
+//...
+
+RkTheme.setType('RkTextInput', 'Register', {
+  backgroundColor: 'white',
+  underlineColor:'darkgreen',
+  underlineWidth:1,
+  input: {
+    
+    marginLeft: 1,
+    marginHorizontal: 0,
+  },
+  labelStyle: {
+    color:'blue',
+  }
+});
+
+RkTheme.setType('RkButton', 'dark', {
+  container: {
+     backgroundColor: 'gray',
+     borderRadius: 10,
+  }
+});
+
+RkTheme.setType('RkButton', 'white', {
+  container: {
+     backgroundColor: 'white',
+     borderRadius: 15,
+  }
+});
+
+// The same because 'container' is default component:
+RkTheme.setType('RkButton', 'dark', {
+  backgroundColor: 'gray',
+  borderRadius: 10,
+});
+
+RkTheme.setType('RkButton', 'icon', {
+  fontSize: 24,
+  width: 46,
+  borderRadius: 25,
+  hitSlop: {top: 5, left: 5, bottom: 5, right: 5}
+});

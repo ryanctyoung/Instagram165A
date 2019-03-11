@@ -16,26 +16,48 @@ submitButton: {
     color: 'yellow',
     paddingTop: 20,
   },
-  container: {
+  containerHome: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     color: 'yellow',
-    backgroundColor: 'darkgray',
+    backgroundColor: 'black',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    paddingTop: 75,
+    color: 'yellow',
+    backgroundColor: 'black'
   },
   welcome: {
-    fontSize: 50,
-    color: 'yellow',
+    fontSize: 25,
+    color: 'purple',
     textAlign: 'center',
-    margin: 10,
+    margin: 5,
     fontWeight: 'bold',
-    marginBottom:  175,
+    marginBottom:  30,
+    bottom: 60
   },
   register: {
-    fontSize: 30,
-    color: 'yellow',
+    fontSize: 15,
+    color: 'blue',
+    textAlign: 'left',
+    bottom:50
+  },
+
+  HomeLogin: {
+    fontSize: 20,
+    color: 'grey',
     textAlign: 'left',
     margin: 1,
+    bottom: 70
+  },
+  HomeText: {
+    fontSize: 20,
+    color: 'white',
+    textAlign: 'left',
+    margin: 1,
+    bottom: 70
   },
 
   instructions: {
@@ -56,17 +78,47 @@ submitButton: {
     padding: 12,
     textAlign:'center',
   },
-
+  buttonRegister: {
+    fontSize: 20,
+    color: 'blue',
+    fontWeight: 'bold',
+  },
+  Forgetbutton: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    padding: 12,
+    textAlign:'center',
+  },
+  dontHave: {
+    fontSize: 15,
+    color: 'grey',
+    textAlign: 'center',
+    margin: 0,
     
-  
 
+  },
 
   bio: {
     fontSize: 30,
     textAlign: 'left',
     marginTop: 30,
   },
-
+  bottomTest: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    marginBottom: 36
+  },
+  rkButtonHome: {
+    backgroundColor: 'white', 
+      width: '80%', 
+      height: 50,  
+      justifyContent: 'center', 
+      alignItems: 'center',
+      bottom: 50,
+      left: 35,
+      paddingTop: 10
+  },
   feed: {
     
   },
