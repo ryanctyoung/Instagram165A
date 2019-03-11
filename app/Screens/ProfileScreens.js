@@ -401,7 +401,6 @@ const profileUI = StyleSheet.create(
       justifyContent: 'center',
       alignContent:'flex-start',
       flexDirection:'row',
-      color:'yellow',
       right:-50,
       bottom:80,
       color:'blue',
@@ -418,11 +417,9 @@ const profileUI = StyleSheet.create(
     fontSize: 12,
     fontWeight: 'bold',
     overflow: 'hidden',
-    color:'yellow',
     color:'blue',
     padding: 0,
     marginLeft: 20,
-
   },
     bio: {
     fontSize: 12,
