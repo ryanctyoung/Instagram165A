@@ -5,6 +5,7 @@ import {openDatabase} from 'react-native-sqlite-storage';
 
 import * as  ImagePicker  from 'react-native-image-picker';
 import GetCurrUser from '../App.js';
+import {UserContext} from '../UserContext'
 
 export {PostScreen, CreatePost}
 var db = openDatabase({name:'users.db'});
@@ -44,7 +45,7 @@ class CreatePost extends Component{
 		this.state = {
 			description:'',
 			photos:[],
-			uid:1 //this.props.navigation.params.uid,
+			uid: this.context//this.props.navigation.params.uid,
 		};
 	}
 
@@ -96,6 +97,7 @@ class CreatePost extends Component{
 			);
 	}
 }
+CreatePost.contextType = UserContext;
 
 
 const PostUI = StyleSheet.create()

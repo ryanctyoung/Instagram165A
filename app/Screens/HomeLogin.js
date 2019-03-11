@@ -2,14 +2,18 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Button, TextInput, } from 'react-native';
 import {NavigationActions, StackActions} from 'react-navigation';
 import {openDatabase} from 'react-native-sqlite-storage';
-import {database, Login} from "../App.js";
+import {database} from "../App.js";
 import {styles} from '../StyleSheet.js';
+import {UserContext} from '../UserContext'
 
 export {HomeScreen, LoginScreen, RegisterScreen} 
 
+
 var db = openDatabase({name:'users.db'});
 
+
 class HomeScreen extends Component{
+    //HomeScreen.contextType = UserContext;
     constructor(props)
     {
       super(props); 
@@ -19,6 +23,7 @@ class HomeScreen extends Component{
 
     componentDidMount()
     {
+      
       
       db.transaction(function(tx) 
     {
@@ -45,7 +50,7 @@ class HomeScreen extends Component{
           var phoNum = 0;
         db.transaction(function(tx)
           {
-            console.log("HOMESCREENECHEK");
+            //console.log("HOMESCREENECHEK");
             tx.executeSql('SELECT user_name, phoneNum FROM users WHERE user_id = ? ',[x],
               (tx,results) => {
                 if(results.rows.length > 0)
@@ -53,7 +58,7 @@ class HomeScreen extends Component{
                   
                   userName = results.rows.item(0).user_name;
                   phoNum = results.rows.item(0).phoneNum;
-                  Login({uid:x,user_name:userName, followers: 0});
+                  this.context.LoginUser({uid:currUser,user_name:userName,followers:0});
                   navigate('App', {uid: x, user_name: userName, pho_num:phoNum});
                 }
                 else
@@ -87,6 +92,7 @@ class HomeScreen extends Component{
     );
   }
 }
+HomeScreen.contextType = UserContext;
 
 
 class LoginScreen extends Component{
@@ -101,8 +107,11 @@ class LoginScreen extends Component{
       };
     }
 
+   
+
+
     render() {
-    const handlePress = () => {
+    const handlePress = (fun) => {
       const { user_name } = this.state;
       const { password } = this.state;
       const { email } = this.state;
@@ -119,9 +128,9 @@ class LoginScreen extends Component{
                 currUser = results.rows.item(0).user_id;
                 userName = results.rows.item(0).user_name;
                 phoNum = results.rows.item(0).phoneNum;
-                Login({uid:currUser,user_name:userName, followers: 0});
+                fun({uid:currUser,user_name:userName,followers:0});
                 navigate('App', {uid: currUser, user_name: userName, pho_num:phoNum});
-                //reset([NavigationActions.navigate({routeName : 'App'})] , 0 );
+                
               }
             });
   })
@@ -132,13 +141,18 @@ class LoginScreen extends Component{
         <Text style={styles.register}>Email</Text>
         <TextInput style={styles.register}placeholder="Please Enter your username" onChangeText={user_name => this.setState({ user_name })}/>
         <TextInput placeholder="Please Enter a password" onChangeText={password => this.setState({ password })}/>
-        <Button icon="md-checkmark" iconPlacement="right" onPress={handlePress} title="Login"/>
+        <UserContext.Consumer>
+                {({LoginUser}) => (<Button icon="md-checkmark" iconPlacement="right" onPress={handlePress(LoginUser)} title="Login"/>)}
+                </UserContext.Consumer>
+        
       </View>
     );
   }
 }
+LoginScreen.contextType = UserContext;
 
 class RegisterScreen extends Component{
+  //RegisterScreen.contextType = UserContext;
   constructor(props) {
     super(props);
     this.state = {
@@ -184,7 +198,11 @@ class RegisterScreen extends Component{
               'SELECT * FROM users WHERE user_name = ?',[user_name],(tx,results) => {
                 if(results.rows.length > 0)
                 {
-                  Login({uid:results.rows.item(0).user_id,user_name:user_name, followers: 0});
+                  <UserContext.Consumer>
+                  {
+                    ({LoginUser}) => (LoginUser({uid:results.rows.item[0].uid,user_name:user_name,followers:0}))
+                  }
+                  </UserContext.Consumer>
                   navigate('Home'); 
                 }
                
@@ -216,4 +234,10 @@ class RegisterScreen extends Component{
         </View>
     );
   }
+
 }
+  RegisterScreen.contextType = UserContext;
+
+
+
+

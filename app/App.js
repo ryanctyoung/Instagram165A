@@ -14,12 +14,14 @@ import FeedScreen from './Screens/FeedScreen';
 import {PostScreen,CreatePost} from './Screens/PostScreen';
 import SearchWindow from './Screens/SearchWindow';
 
+import {UserContext} from './UserContext';
 //export {Database, currUser, userTuple};
 //var db = openDatabase({ name: 'users.db' });
 ;
 var database = {name:'users.db'};
 var db = openDatabase({name:'users.db'});
-var userTuple = {uid: 2,  user_name:'AGGIE', followers: 0}
+var userTuple = {uid: -1,  user_name:'AGGIE', followers: 0}
+
 
 /*class Database
 {
@@ -64,7 +66,7 @@ const ProfileStack = createStackNavigator(
 
   },
   {
-    header:null,
+    
   }
 );
 
@@ -100,11 +102,13 @@ const FeedStack = createStackNavigator(
 const TabNavigator = createBottomTabNavigator(
   {
     Feed:FeedStack,
+    Search:SearchStack,
     Profile: {screen: ProfileStack, 
       navigationOptions: () => ({
       tabBarOnPress:({navigation, defaultHandler}) => {
+        
         navigation.setParams({uid:userTuple.uid, user_name:userTuple.user_name, pho_num:0});
-        navigation.navigate('Profile', {uid:userTuple.uid, user_name:userTuple.user_name, pho_num:0});
+        navigation.navigate('Profile', {uid:-1, user_name:userTuple.uid, pho_num:0});
         
       },
 
@@ -140,10 +144,29 @@ const AppContainer = createAppContainer(EntryStack);
 type Props = {};
 export default class App extends Component<Props> {
   
+  constructor(props)
+  {
+    super(props);
+    this.state = {
+      user: userTuple,
+      LoginUser: (u) => {
+        const temp = u
+        console.log("LOGINUSER" + " " + temp.uid);
+        this.setState(state => ({user:temp}))
+        userTuple = u;
 
+      },
+    };
+  }
 
   render() {
+    userTuple = this.context.user;
     const handlePress = () => false
-    return <AppContainer />;
+    return(
+      <UserContext.Provider value = {this.state}>
+      <AppContainer />
+      </UserContext.Provider>
+      ); 
   }
 }
+App.contextType = UserContext;

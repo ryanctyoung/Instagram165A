@@ -7,13 +7,15 @@ import {styles} from '../StyleSheet.js';
 import {GetCurrUser} from '../App.js'
 import * as  ImagePicker  from 'react-native-image-picker';
 
+import {UserContext} from '../UserContext'
+
 export {ProfileScreen, EditScreen} 
 
 var db = openDatabase({name:'users.db'});
 
 class ProfileScreen extends Component{
 
-
+    static contextType = UserContext;
 
     RetrievePosts(){
       var temp = [];
@@ -76,13 +78,13 @@ class ProfileScreen extends Component{
       
     }
 
-    constructor(props) {
-      super(props);
+    constructor(props, context) {
+      super(props,context);
         this.state = {
         //get follow amount here
         currUser: GetCurrUser().uid,
-        uid: this.props.navigation.state.params.uid,
-        user_name : this.props.navigation.state.params.user_name,
+        uid: (this.props.navigation.state.params.uid == -1 ? this.context.user.uid: this.props.navigation.state.params.uid),
+        user_name : (this.props.navigation.state.params.uid == -1 ? this.context.user.user_name: this.props.navigation.state.params.user_name),
         pho_num : this.props.navigation.state.params.pho_num,
         posts:[],
         followers: 0,
