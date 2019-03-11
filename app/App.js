@@ -100,6 +100,8 @@ const FeedStack = createStackNavigator(
 const TabNavigator = createBottomTabNavigator(
   {
     Feed:FeedStack,
+    Search: SearchStack,
+    Post: CreatePost,
     Profile: {screen: ProfileStack, 
       navigationOptions: () => ({
       tabBarOnPress:({navigation, defaultHandler}) => {

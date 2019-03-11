@@ -1,20 +1,21 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Button, TextInput, Image, FlatList, TouchableHighlight,} from 'react-native';
+import {Platform, StyleSheet, Text, View, Button, TextInput, Image, FlatList, TouchableHighlight,ScrollView} from 'react-native';
 import {NavigationActions, StackActions} from 'react-navigation';
 import {openDatabase} from 'react-native-sqlite-storage';
 import {database} from "../App.js";
 import {styles} from '../StyleSheet.js';
 import {GetCurrUser} from '../App.js'
 import * as  ImagePicker  from 'react-native-image-picker';
+import { RkButton,RkText,RkCard,RkTheme, } from 'react-native-ui-kitten';
+import { Avatar } from '../components/avatar';
+import { UtilStyles } from '../style/styles';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export {ProfileScreen, EditScreen} 
 
 var db = openDatabase({name:'users.db'});
 
 class ProfileScreen extends Component{
-
-
-
     RetrievePosts(){
       var temp = [];
       db.transaction(function(tx)
@@ -182,24 +183,22 @@ class ProfileScreen extends Component{
       navigate(Post, {postID:postID});
     }
 
-
-
-    PostLibrary = () =>
-    {
-      return(
-          <View>
-          <FlatList data= {posts} horizontal={true} renderItem = {({item}) => PostItem(item.caption)} />
-          </View>
-        );
-    }
-
-
-
+    const likeStyle = [styles.buttonIcon, { color: RkTheme.colors.accent }];
+    const iconButton = [styles.buttonIcon, { color: RkTheme.current.colors.text.hint }];
        return (
+
+        <ScrollView
+      automaticallyAdjustContentInsets={true}
+      style={UtilStyles.container}>
         <View style={profileUI.wrapper}>
           <Text style={profileUI.profileTitle}> {user_name}'s Profile </Text>
-            
+          <Image source={require('../img/Ava1.png')} style={styless.avatar} />  
+          <Text style={profileUI.profileTitle}> {user_name} </Text>
             <View style={profileUI.followStats} >
+            <View >
+            <Text style={profileUI.profiledetail}> {this.state.followers} </Text>
+           <Text style={profileUI.profiledetail}> Posts </Text>
+           </View>
 
             <View >
             <Text style={profileUI.profiledetail}> {this.state.followers} </Text>
@@ -209,14 +208,66 @@ class ProfileScreen extends Component{
            <View>
             <Text style={profileUI.profiledetail}> {this.state.following} </Text>
            <Text style={profileUI.profiledetail}> Following </Text>
+  
+            </View>    
+       </View>
+           <View style={profileUI.wrapper}>
+           <View style={profileUI.followStats2} >
+           <RkButton rkType='primary' style={UtilStyles.spaceBottom} onPress={()=> navigate('Edit')} > Edit Profile </RkButton>
+           <RkButton rkType='primary' style={UtilStyles.spaceBottom} onPress={()=> navigate('Create', {uid:currUser}) } > Privacy </RkButton>
            </View>
-
            </View>
-          
-          <ProfileVariance />
-          <PostLibrary/>
-          <Text> Hello {user_name}!!! </Text>  
+           <View style={profileUI.wrapper}>
+           <Text style={profileUI.bio}>
+             Bio 
+           </Text>
+           <Text style={profileUI.bio}>
+             I love to eat grass and drink water! 
+           </Text>
+           </View>
+           <View style={{ flex: 1 }}>
+      <RkCard>  
+            <View rkCardHeader={true}>
+              <View style={{ flexDirection: 'row' }}>
+                <Image source={require('../img/Ava1.png')} style={styless.avatar} />
+                <View style={{}}>
+                  <RkText rkType='header'>AGGIE</RkText>
+                  <RkText rkType='subtitle'>7 minutes ago</RkText>
+                </View>
+              </View>
+              <RkButton rkType='clear'>
+                <Icon style={styles.dot} name="circle" />
+                <Icon style={styles.dot} name="circle" />
+                <Icon style={styles.dot} name="circle" />
+              </RkButton>
+            </View>
+            <Image rkCardImg={true} source={require('../img/post2.png')} />
+            <View rkCardContent={true}>
+              <RkText rkType='hero'>
+                Meet Catty!!! 
+              </RkText>
+            </View>
+            <View rkCardFooter={true} style={styles.footer}>
+              <RkButton rkType='clear link accent'>
+                <Icon name="heart" style={likeStyle} />
+                <RkText rkType='accent'>0</RkText>
+              </RkButton>
+              <RkButton rkType='clear link'>
+                <Icon name="comment-o" style={iconButton} />
+                <RkText rkType='hint'>0</RkText>
+              </RkButton>
+              <RkButton rkType='clear link'>
+                <Icon name="send-o" style={iconButton} />
+                <RkText rkType='hint'>0</RkText>
+              </RkButton>
+            </View>
+          </RkCard>
         </View>
+          <ProfileVariance />
+           
+        </View>
+
+        </ScrollView>
       )
     }
 }
@@ -275,6 +326,66 @@ class EditScreen extends Component{
   }
 }
 
+RkTheme.setType('RkCard', 'story', {
+  img: {
+    height: 100,
+    opacity: 0.7
+  },
+  header: {
+    alignSelf: 'auto'
+  },
+  content:{
+    alignSelf:'auto'
+  }
+});
+
+RkTheme.setType('RkText','hero',{
+  fontSize: 15,
+  color:'darkgreen'
+ });
+
+let styless = StyleSheet.create({
+  screen: {
+    backgroundColor: '#f0f1f5',
+    padding: 12,
+  },
+  buttonIcon: {
+    marginRight: 7,
+    fontSize: 19.7,
+  },
+  footer: {
+    marginHorizontal: 16,
+  },
+  avatar: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    marginRight: 17,
+  },
+  dot: {
+    fontSize: 6.5,
+    color: '#0000008e',
+    marginLeft: 2.5,
+    marginVertical: 10,
+  },
+  floating: {
+    width: 56,
+    height: 56,
+    position: 'absolute',
+    zIndex: 200,
+    right: 16,
+    top: 173,
+  },
+  footerButtons: {
+    flexDirection: 'row',
+  },
+  overlay: {
+    justifyContent: 'flex-end',
+    paddingVertical: 23,
+    paddingHorizontal: 16,
+  },
+});
+
 const profileUI = StyleSheet.create(
 {
     wrapper: {
@@ -287,20 +398,38 @@ const profileUI = StyleSheet.create(
       justifyContent: 'center',
       alignContent:'flex-start',
       flexDirection:'row',
-      color:'yellow',
+      right:-50,
+      bottom:80,
+      color:'blue',
+    },
+    followStats2:{
+      justifyContent: 'center',
+      alignContent:'center',
+      flexDirection:'row',
+      right:-50,
+      bottom:70,
+      color:'blue',
     },
     profiledetail: {
     fontSize: 12,
     fontWeight: 'bold',
     overflow: 'hidden',
-    color:'yellow',
+    color:'blue',
     padding: 0,
     marginLeft: 20,
-
+  },
+    bio: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    color:'blue',
+    padding: 0,
+    marginLeft: 20,
+    bottom:45
   },
 
     profileTitle: {
-      color:'yellow',fontSize: 40,
+      color:'darkgreen',fontSize: 15,
     fontWeight: 'bold',
 
     }
