@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Button, TextInput, Image, FlatList, TouchableHighlight,} from 'react-native';
+import {Platform, StyleSheet, Text, View, Button, TextInput, Image, FlatList, TouchableHighlight,ScrollView} from 'react-native';
 import {NavigationActions, StackActions} from 'react-navigation';
 import {openDatabase} from 'react-native-sqlite-storage';
 import {database} from "../App.js";
@@ -183,19 +183,6 @@ class ProfileScreen extends Component{
 
       navigate(Post, {postID:postID});
     }
-
-
-
-    PostLibrary = () =>
-    {
-      return(
-          <View>
-          <FlatList data= {posts} horizontal={true} renderItem = {({item}) => PostItem(item.caption)} />
-          </View>
-        );
-    }
-
-
 
        return (
         <View style={profileUI.wrapper}>
