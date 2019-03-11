@@ -16,10 +16,10 @@ var db = openDatabase({name:'users.db'});
 
 
 class HomeScreen extends Component{
-    //HomeScreen.contextType = UserContext;
-    constructor(props)
+    static contextType = UserContext;
+    constructor(props, context)
     {
-      super(props); 
+      super(props,context); 
       this.state = {uid:this.props.navigation.state.params.uid, 
                     user_name:'',
                     password:''};
@@ -46,13 +46,32 @@ class HomeScreen extends Component{
     }
     
     render() {
-    const {uid} = this.state;
-    const {user_name} = this.state;
-    const {password} = this.state;
-    const {navigate} = this.props.navigation;
-    const { reset } = this.props.navigation;
+      const { navigate } = this.props.navigation;
+    const loginPress = (fun) => {
 
-    const loginPress = (x) => {
+      console.log("loginPress")
+      const { user_name } = this.state;
+      const { password } = this.state;
+      const { navigate } = this.props.navigation;
+      const { reset } = this.props.navigation;
+
+      db.transaction(function(tx) {
+          tx.executeSql(
+            'SELECT * from users WHERE user_name = ? AND password = ?', [user_name, password],
+            (tx, results) => {
+              console.log('Results, ' + results.rows.item(0).email);
+              if (results.rows.length > 0){
+                currUser = results.rows.item(0).user_id;
+                userName = results.rows.item(0).user_name;
+                phoNum = results.rows.item(0).phoneNum;
+                fun({uid:currUser,user_name:userName,followers:0});
+                navigate('App', {uid: currUser, user_name: userName, pho_num:phoNum});
+                
+              }
+            });
+  })
+    };
+    const autoLogin = (x) => {
           var userName = '';
           var phoNum = 0;
         db.transaction(function(tx)
@@ -66,6 +85,7 @@ class HomeScreen extends Component{
                   userName = results.rows.item(0).user_name;
                   phoNum = results.rows.item(0).phoneNum;
                   this.context.LoginUser({uid:currUser,user_name:userName,followers:0});
+
                   navigate('App', {uid: x, user_name: userName, pho_num:phoNum});
                 }
                 else
@@ -79,10 +99,13 @@ class HomeScreen extends Component{
 
     function HomeOptions(props)
     {
+      
       return(
           <View>
-            <RkButton rkType= 'rounded' style={styles.rkButtonHome}
-            contentStyle={{color: 'red'}} buttonStyle={{ width: 50 }} onPress={loginPress()}>Sign in</RkButton>
+            <UserContext.Consumer>
+                {({LoginUser}) => (<Button icon="md-checkmark" iconPlacement="right" onPress={() => loginPress(LoginUser)} title="Login"/>)}
+                </UserContext.Consumer>
+            
             <View styles = {styles.bottomTest}>
               <Button styles = {styles.bottomTest} onPress={() => navigate('Forget Password')} title="Forget Password?" />
             </View>
@@ -101,7 +124,7 @@ class HomeScreen extends Component{
 
     if(this.state.uid >= 0)
     {
-     loginPress(this.state.uid)
+     autoLogin(this.state.uid)
     }
 
     return (
@@ -110,7 +133,7 @@ class HomeScreen extends Component{
        <Text style={styles.HomeLogin}>Username</Text>
        <TextInput style={styles.HomeText} placeholder="Please Enter Your Username" onChangeText={user_name=> this.setState({ user_name })} />
        <Text style={styles.HomeLogin}>Password</Text>
-       <TextInput style={styles.HomeText} placeholder="Please Enter Your Password" onChangeText={user_name=> this.setState({ user_name })} />
+       <TextInput style={styles.HomeText} placeholder="Please Enter Your Password" onChangeText={password=> this.setState({ password })} />
        
        
        <HomeOptions/>
@@ -142,8 +165,6 @@ class LoginScreen extends Component{
     const handlePress = (fun) => {
       const { user_name } = this.state;
       const { password } = this.state;
-      const { email } = this.state;
-      const { phoneNum } = this.state;
       const { navigate } = this.props.navigation;
       const { reset } = this.props.navigation;
 
@@ -170,7 +191,7 @@ class LoginScreen extends Component{
         <TextInput style={styles.register}placeholder="Please Enter your username" onChangeText={user_name => this.setState({ user_name })}/>
         <TextInput placeholder="Please Enter a password" onChangeText={password => this.setState({ password })}/>
         <UserContext.Consumer>
-                {({LoginUser}) => (<Button icon="md-checkmark" iconPlacement="right" onPress={handlePress(LoginUser)} title="Login"/>)}
+                {({LoginUser}) => (<Button icon="md-checkmark" iconPlacement="right" onPress={() => handlePress(LoginUser)} title="Login"/>)}
                 </UserContext.Consumer>
         
       </View>
@@ -178,7 +199,7 @@ class LoginScreen extends Component{
   }
 }
 LoginScreen.contextType = UserContext;
-/
+
 class RegisterScreen extends Component{
   //RegisterScreen.contextType = UserContext;
   constructor(props) {
@@ -226,12 +247,8 @@ class RegisterScreen extends Component{
               'SELECT * FROM users WHERE user_name = ?',[user_name],(tx,results) => {
                 if(results.rows.length > 0)
                 {
-                  <UserContext.Consumer>
-                  {
-                    ({LoginUser}) => (LoginUser({uid:results.rows.item[0].uid,user_name:user_name,followers:0}))
-                  }
-                  </UserContext.Consumer>
-                  navigate('Home'); /
+                  
+                  navigate('Home', {uid:-1}); 
                 }
                
               }

@@ -52,6 +52,56 @@ export default class FeedScreen extends Component{
     static navigationOptions = {
       title: 'AggieGrams',
     };
+  
+  /*
+  const PostItem = (item) =>
+  {
+  return (
+    <RkCard>  
+            <View rkCardHeader={true}>
+              <View style={{ flexDirection: 'row' }}>
+                <Image source={require('../img/cow.png')} style={styles.avatar} />
+                <View style={{}}>
+                  <RkText rkType='header'>UC Davis Aggies</RkText>
+                  <RkText rkType='subtitle'>7 minutes ago</RkText>
+                </View>
+              </View>
+              <RkButton rkType='clear'>
+                <Icon style={styles.dot} name="circle" />
+                <Icon style={styles.dot} name="circle" />
+                <Icon style={styles.dot} name="circle" />
+              </RkButton>
+            </View>
+            <Image rkCardImg={true} source={require('../img/giphy.gif')} />
+            <View rkCardContent={true}>
+              <RkText rkType='hero'>
+                That Feeling when you know you're almost done with the Quarter!
+              </RkText>
+            </View>
+            <View rkCardFooter={true} style={styles.footer}>
+              <RkButton rkType='clear link accent'>
+                <Icon name="heart" style={likeStyle} />
+                <RkText rkType='accent'>12,531</RkText>
+              </RkButton>
+              <RkButton rkType='clear link'>
+                <Icon name="comment-o" style={iconButton} />
+                <RkText rkType='hint'>5671</RkText>
+              </RkButton>
+              <RkButton rkType='clear link'>
+                <Icon name="send-o" style={iconButton} />
+                <RkText rkType='hint'>5K</RkText>
+              </RkButton>
+            </View>
+          </RkCard>
+
+  );
+  }
+
+  <FlatList
+  data={posts}
+  renderItem={({item}) => PostItem(item)}
+  />
+  */
   render()
   {
     const{posts} = this.state

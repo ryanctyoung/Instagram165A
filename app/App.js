@@ -20,7 +20,7 @@ import {UserContext} from './UserContext';
 
 var database = {name:'users.db'};
 var db = openDatabase({name:'users.db'});
-var userTuple = {uid: -1,  user_name:'AGGIE', followers: 0}
+var userTuple = {uid: 1,  user_name:'AGGIE', followers: 0}
 
 
 /*class Database
