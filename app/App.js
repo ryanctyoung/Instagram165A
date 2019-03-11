@@ -8,7 +8,7 @@ import {openDatabase} from 'react-native-sqlite-storage';
 import {styles} from './StyleSheet.js';
 //import HomeScreen from './pages/HomeScreen';
 
-import {HomeScreen, LoginScreen, RegisterScreen} from './Screens/HomeLogin.js'
+import {HomeScreen, RegisterScreen} from './Screens/HomeLogin.js'
 import {ProfileScreen, EditScreen} from './Screens/ProfileScreens.js';
 import FeedScreen from './Screens/FeedScreen';
 import {PostScreen,CreatePost} from './Screens/PostScreen';
@@ -129,7 +129,6 @@ const TabNavigator = createBottomTabNavigator(
 const EntryStack = createSwitchNavigator(
   {
     Home: HomeScreen,
-    Login: LoginScreen,
     Register: RegisterScreen,
     App: TabNavigator,
   },

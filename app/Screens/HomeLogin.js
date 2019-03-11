@@ -9,7 +9,7 @@ import {RkButton,RkText,RkTheme,RkTextInput} from 'react-native-ui-kitten';
 import { UtilStyles } from '../style/styles';
 ;
 
-export {HomeScreen, LoginScreen, RegisterScreen} 
+export {HomeScreen, RegisterScreen} 
 
 
 var db = openDatabase({name:'users.db'});
@@ -113,8 +113,7 @@ class HomeScreen extends Component{
             <Text style={styles.dontHave}>OR</Text>
             <Text style={styles.dontHave}>Dont have an account? </Text>
          
-          <Button onPress={() => navigate('Register')} title= "Register" />  
-          <Button block style={styles.button} onPress={() => navigate('Login')} title="Login" />
+          <Button onPress={() => navigate('Register')} title= "Register" /> 
           <Button block style={styles.button} onPress={() => navigate('Feed')} title="Feed" />
           </View>
           );
@@ -146,62 +145,10 @@ class HomeScreen extends Component{
 HomeScreen.contextType = UserContext;
 
 
-class LoginScreen extends Component{
-    constructor(props) {
-      super(props);
-      this.state = {
-        user_name: '',
-        password: '',
-        email: '',
-        phoneNum: '',
-        user_found: false,
-      };
-    }
 
-   
-
-
-    render() {
-    const handlePress = (fun) => {
-      const { user_name } = this.state;
-      const { password } = this.state;
-      const { navigate } = this.props.navigation;
-      const { reset } = this.props.navigation;
-
-      db.transaction(function(tx) {
-          tx.executeSql(
-            'SELECT * from users WHERE user_name = ? AND password = ?', [user_name, password],
-            (tx, results) => {
-              console.log('Results, ' + results.rows.item(0).email);
-              if (results.rows.length > 0){
-                currUser = results.rows.item(0).user_id;
-                userName = results.rows.item(0).user_name;
-                phoNum = results.rows.item(0).phoneNum;
-                fun({uid:currUser,user_name:userName,followers:0});
-                navigate('App', {uid: currUser, user_name: userName, pho_num:phoNum});
-                
-              }
-            });
-  })
-}; 
-    return (
-      <View style={styles.wrapper}>
-
-        <Text style={styles.register}>Email</Text>
-        <TextInput style={styles.register}placeholder="Please Enter your username" onChangeText={user_name => this.setState({ user_name })}/>
-        <TextInput placeholder="Please Enter a password" onChangeText={password => this.setState({ password })}/>
-        <UserContext.Consumer>
-                {({LoginUser}) => (<Button icon="md-checkmark" iconPlacement="right" onPress={() => handlePress(LoginUser)} title="Login"/>)}
-                </UserContext.Consumer>
-        
-      </View>
-    );
-  }
-}
-LoginScreen.contextType = UserContext;
 
 class RegisterScreen extends Component{
-  //RegisterScreen.contextType = UserContext;
+  static contextType = UserContext;
   constructor(props) {
     super(props);
     this.state = {
@@ -286,10 +233,10 @@ class RegisterScreen extends Component{
         <RkTextInput rkType='success'placeholder="Please enter your password" onChangeText={password => this.setState({ password })}/>
             
         <RkButton rkType= 'rounded' style={styles.rkButtonHome}
-            contentStyle={{color: 'red'}} buttonStyle={{ width: 50 }} onPress={() => navigate('HomeScreen')}>Register</RkButton>
+            contentStyle={{color: 'red'}} buttonStyle={{ width: 50 }} onPress={() => handlePress()}>Register</RkButton>
 
         <RkButton rkType= 'rounded' style={styles.rkButtonHome}
-            contentStyle={{color: 'red'}} buttonStyle={{ width: 50 }} onPress={() => navigate('HomeScreen')}>Back</RkButton>
+            contentStyle={{color: 'red'}} buttonStyle={{ width: 50 }} onPress={() => navigate('Home', {uid:-1})}>Back</RkButton>
             <Button icon="md-checkmark" iconPlacement="right" onPress={handlePress} title="Register"/>
         </View>
         </ScrollView>

@@ -10,6 +10,63 @@ import {UserContext} from '../UserContext'
 
 export {PostScreen, CreatePost}
 var db = openDatabase({name:'users.db'});
+
+// post: {pID, caption, userID} Comments: {pid, cid, userID} Shares: {pid, sid, userID} Likes: {pid, userID}
+/*
+  const PostItem = (item) =>
+  {
+    #likes
+    #comment
+    #share
+    caption
+    imagePost
+    Username
+    ProfilePic
+  return (
+    <RkCard>  
+            <View rkCardHeader={true}>
+              <View style={{ flexDirection: 'row' }}>
+                <Image source={require('profilePicture')} style={styles.avatar} />
+                <View style={{}}>
+                  <RkText rkType='header'>Username</RkText>
+                </View>
+              </View>
+              <RkButton rkType='clear'>
+                <Icon style={styles.dot} name="circle" />
+                <Icon style={styles.dot} name="circle" />
+                <Icon style={styles.dot} name="circle" />
+              </RkButton>
+            </View>
+            <Image rkCardImg={true} source={require(imagePost)} />
+            <View rkCardContent={true}>
+              <RkText rkType='hero'>
+                caption
+              </RkText>
+            </View>
+            <View rkCardFooter={true} style={styles.footer}>
+              <RkButton rkType='clear link accent'>
+                <Icon name="heart" style={likeStyle} />
+                <RkText rkType='accent'>#likes</RkText>
+              </RkButton>
+              <RkButton rkType='clear link'>
+                <Icon name="comment-o" style={iconButton} />
+                <RkText rkType='hint'>#comment</RkText>
+              </RkButton>
+              <RkButton rkType='clear link'>
+                <Icon name="send-o" style={iconButton} />
+                <RkText rkType='hint'>#Share</RkText>
+              </RkButton>
+            </View>
+          </RkCard>
+
+  );
+  }
+
+  <FlatList
+  data={posts}
+  renderItem={({item}) => PostItem(item)}
+  />
+  */
 class PostScreen extends Component{
 	constructor(props)
 	{
