@@ -44,17 +44,6 @@ const Login = (loggedUser) =>
 }
 
 
-const PostStack = createStackNavigator(
-{ 
-  Create:CreatePost,
-    Post: PostScreen,
-    
-},
-{
-  //initialRouteName :"Post",
-  //initialRouteParams:{postID:this.props.navigation.params.postID},
-}
-  );
 
 
 
@@ -62,7 +51,6 @@ const ProfileStack = createStackNavigator(
   {
     Profile: ProfileScreen,
     Edit: EditScreen,
-    PostStack: PostStack,
 
   },
   {
@@ -89,7 +77,6 @@ const FeedStack = createStackNavigator(
   {
     Feed: FeedScreen,
     Profile: ProfileStack,
-    PostStack: PostStack,
     Search: SearchStack,
   },
   {
@@ -103,12 +90,11 @@ const TabNavigator = createBottomTabNavigator(
   {
     Feed:FeedStack,
     Search: SearchStack,
-    Post: CreatePost,
+    Create: CreatePost,
     Profile: {screen: ProfileStack, 
       navigationOptions: () => ({
       tabBarOnPress:({navigation, defaultHandler}) => {
-        
-        navigation.setParams({uid:userTuple.uid, user_name:userTuple.user_name, pho_num:0});
+
         navigation.navigate('Profile', {uid:-1, user_name:userTuple.uid, pho_num:0});
         
       },
@@ -157,10 +143,12 @@ export default class App extends Component<Props> {
 
       },
     };
+    
   }
 
   render() {
     userTuple = this.context.user;
+
     const handlePress = () => false
     return(
       <UserContext.Provider value = {this.state}>

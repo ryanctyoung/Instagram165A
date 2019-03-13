@@ -11,6 +11,8 @@ import { Avatar } from '../components/avatar';
 import { UtilStyles } from '../style/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+//import {PostItem} from './PostScreen';
+
 import {UserContext} from '../UserContext'
 
 export {ProfileScreen, EditScreen} 
@@ -21,10 +23,11 @@ class ProfileScreen extends Component{
     static contextType = UserContext;
     RetrievePosts(){
       var temp = [];
+
       db.transaction(function(tx)
       {
-
-        tx.executeSql("SELECT * FROM post WHERE uid = ? ",[this.state.uid],
+        console.log("RetrievePosts");
+        tx.executeSql("SELECT * FROM post ",[],
             (tx, results) => 
             {
               console.log("results.rows.item(i).caption");
@@ -33,14 +36,16 @@ class ProfileScreen extends Component{
                 for(let i = 0; i < results.rows.length;++i)
                 {
                   temp.push({caption:results.rows.item(i).caption});
-                  console.log(results.rows.item(i).caption + "\n");
+                  console.log(temp[i].caption + "\n");
                 }
                
               }
-              
+               
               
                }
               );
+
+
       }
         );
       this.setState({
@@ -139,10 +144,11 @@ class ProfileScreen extends Component{
       if(uid == currUser)
       {
         return(
-          <View style={styles.wrapper}>
+          
+           <View style={profileUI.followStats2} >
            
-           <Button block style={styles.button} onPress={()=> navigate('Edit')} title ={ 'Edit Profile'}/>
-           <Button block style={styles.button} onPress={()=> navigate('Create', {uid:currUser}) } title ={ 'Upload Post'}/>
+           <RkButton rkType='primary' style={UtilStyles.spaceBottom} onPress={()=> navigate('Edit')} > Edit Profile </RkButton>
+           <RkButton rkType='primary' style={UtilStyles.spaceBottom} onPress={()=> navigate('Create', {uid:currUser}) } > Privacy </RkButton>
             
         </View>
           );//
@@ -150,32 +156,73 @@ class ProfileScreen extends Component{
       else
       {
         return(
-          <View style={profileUI.wrapper}>
+          
+           <View style={profileUI.followStats2} >
            
            <Button block style={styles.button} onPress={()=> Follow()} title ={ 'Follow'}/>
           </View>
-          );//
+          ); //
       }
     }
 
     
+    PostItem = (item) => {
+      const likes = 0;
+    const comments = 0;
+    const {caption} = item;
+    const imagePost = " ";
+    const Username = " ";
+    const profilePicture = " ";
+  return (
+    <RkCard>  
+            <View rkCardHeader={true}>
+              <View style={{ flexDirection: 'row' }}>
+                <Image source={profilePicture} style={styles.avatar} />
+                <View style={{}}>
+                  <RkText rkType='header'>Username</RkText>
+                </View>
+              </View>
+              <RkButton rkType='clear'>
+                <Icon style={styles.dot} name="circle" />
+                <Icon style={styles.dot} name="circle" />
+                <Icon style={styles.dot} name="circle" />
+              </RkButton>
+            </View>
+            <Image rkCardImg={true} source={imagePost} />
+            <View rkCardContent={true}>
+              <RkText rkType='hero'>
+                caption
+              </RkText>
+            </View>
+            <View rkCardFooter={true} style={styles.footer}>
+              <RkButton rkType='clear link accent'>
+                <Icon name="heart" style={likeStyle} />
+                <RkText rkType='accent'>likes</RkText>
+              </RkButton>
+              <RkButton rkType='clear link'>
+                <Icon name="comment-o" style={iconButton} />
+                <RkText rkType='hint'>comments</RkText>
+              </RkButton>
+              <RkButton rkType='clear link'>
+                <Icon name="send-o" style={iconButton} />
+                <RkText rkType='hint'></RkText>
+              </RkButton>
+            </View>
+          </RkCard>
 
-    PostItem = (caption) => {
+  );
+    }
 
-      /*
-        <TouchableHighlight onPress={()=>PostNavigate(postID)}>
-        <Image source = {src} style={{ width: 300, height: 300 }}/>
-        </TouchableHighlight>
-      */
-      //
+    /*PostItem = (item) => {
+      const {caption} = item
       src = './test.png';
       return(
         <View>
-        <Text style={fontSize = 40}>{caption} </Text>
+        <Text style={{fontSize:40, color:'white'}}>{caption} </Text>
         
         </View>
         );//
-    }
+    }*/
 
 
 
@@ -215,11 +262,8 @@ class ProfileScreen extends Component{
             </View>    
        </View>
            <View style={profileUI.wrapper}>
-           <View style={profileUI.followStats2} >
-           <RkButton rkType='primary' style={UtilStyles.spaceBottom} onPress={()=> navigate('Edit')} > Edit Profile </RkButton>
-           <RkButton rkType='primary' style={UtilStyles.spaceBottom} onPress={()=> navigate('Create', {uid:currUser}) } > Privacy </RkButton>
-           </View>
-           </View>
+              <ProfileVariance />          
+            </View>
            <View style={profileUI.wrapper}>
            <Text style={profileUI.bio}>
              Bio 
@@ -228,45 +272,12 @@ class ProfileScreen extends Component{
              I love to eat grass and drink water! 
            </Text>
            </View>
-           <View style={{ flex: 1 }}>
-      <RkCard>  
-            <View rkCardHeader={true}>
-              <View style={{ flexDirection: 'row' }}>
-                <Image source={require('../img/Ava1.png')} style={styless.avatar} />
-                <View style={{}}>
-                  <RkText rkType='header'>AGGIE</RkText>
-                  <RkText rkType='subtitle'>7 minutes ago</RkText>
-                </View>
-              </View>
-              <RkButton rkType='clear'>
-                <Icon style={styles.dot} name="circle" />
-                <Icon style={styles.dot} name="circle" />
-                <Icon style={styles.dot} name="circle" />
-              </RkButton>
-            </View>
-            <Image rkCardImg={true} source={require('../img/post2.png')} />
-            <View rkCardContent={true}>
-              <RkText rkType='hero'>
-                Meet Catty!!! 
-              </RkText>
-            </View>
-            <View rkCardFooter={true} style={styles.footer}>
-              <RkButton rkType='clear link accent'>
-                <Icon name="heart" style={likeStyle} />
-                <RkText rkType='accent'>0</RkText>
-              </RkButton>
-              <RkButton rkType='clear link'>
-                <Icon name="comment-o" style={iconButton} />
-                <RkText rkType='hint'>0</RkText>
-              </RkButton>
-              <RkButton rkType='clear link'>
-                <Icon name="send-o" style={iconButton} />
-                <RkText rkType='hint'>0</RkText>
-              </RkButton>
-            </View>
-          </RkCard>
-        </View>
-          <ProfileVariance />
+
+           <FlatList
+            data={posts}
+            renderItem={({item}) => PostItem(item)}
+              />
+          
            
         </View>
 

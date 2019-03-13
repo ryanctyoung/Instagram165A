@@ -6,27 +6,60 @@ import {openDatabase} from 'react-native-sqlite-storage';
 import * as  ImagePicker  from 'react-native-image-picker';
 import GetCurrUser from '../App.js';
 import {UserContext} from '../UserContext'
+import { RkButton,RkText,RkCard,RkTheme, } from 'react-native-ui-kitten';
+import {styles} from '../StyleSheet'
 
-
-export {PostScreen, CreatePost}
+export {PostScreen, CreatePost, PostItem} //also export 
 var db = openDatabase({name:'users.db'});
 
-// post: {pID, caption, userID} Comments: {pid, cid, userID} Shares: {pid, sid, userID} Likes: {pid, userID}
-/*
-  const PostItem = (item) =>
+
+
+
+  function RetrievePosts()
   {
-    #likes
-    #comment
-    #share
-    caption
-    imagePost
-    Username
-    ProfilePic
+    var temp = [];
+      db.transaction(function(tx) {
+        tx.executeSql(
+          'SELECT',[],
+          (tx,results) =>{
+
+          }
+          );
+        
+        for(let i = 0; i < results.rows.length; ++i)
+        {
+            temp.push(results.rows.item[i]);
+        }
+
+        
+      });
+      this.setState({
+        posts:temp
+      });
+  }
+
+  const PostItem =(item) =>
+  {
+  	// post: {post_ID, caption, userID} Comments: {pid, cid, userID, text} Likes: {pid, userID}
+  	const {caption} = item
+      src = './test.png';
+      return(
+        <View>
+        <Text style={{fontSize:40, color:'white'}}>{caption} </Text>
+        
+        </View>
+        );
+    /*const likes = 0;
+    const comments = 0;
+    const {caption} = item;
+    const imagePost = " ";
+    const Username = " ";
+    const profilePicture = " ";
   return (
     <RkCard>  
             <View rkCardHeader={true}>
               <View style={{ flexDirection: 'row' }}>
-                <Image source={require('profilePicture')} style={styles.avatar} />
+                <Image source={profilePicture} style={styles.avatar} />
                 <View style={{}}>
                   <RkText rkType='header'>Username</RkText>
                 </View>
@@ -37,7 +70,7 @@ var db = openDatabase({name:'users.db'});
                 <Icon style={styles.dot} name="circle" />
               </RkButton>
             </View>
-            <Image rkCardImg={true} source={require(imagePost)} />
+            <Image rkCardImg={true} source={imagePost} />
             <View rkCardContent={true}>
               <RkText rkType='hero'>
                 caption
@@ -46,35 +79,32 @@ var db = openDatabase({name:'users.db'});
             <View rkCardFooter={true} style={styles.footer}>
               <RkButton rkType='clear link accent'>
                 <Icon name="heart" style={likeStyle} />
-                <RkText rkType='accent'>#likes</RkText>
+                <RkText rkType='accent'>likes</RkText>
               </RkButton>
               <RkButton rkType='clear link'>
                 <Icon name="comment-o" style={iconButton} />
-                <RkText rkType='hint'>#comment</RkText>
+                <RkText rkType='hint'>comments</RkText>
               </RkButton>
               <RkButton rkType='clear link'>
                 <Icon name="send-o" style={iconButton} />
-                <RkText rkType='hint'>#Share</RkText>
+                <RkText rkType='hint'></RkText>
               </RkButton>
             </View>
           </RkCard>
 
-  );
+  );*/
   }
 
-  <FlatList
-  data={posts}
-  renderItem={({item}) => PostItem(item)}
-  />
-  */
+  
+  
 class PostScreen extends Component{
 	constructor(props)
 	{
 		super(props);
 		this.state = 
 		{
-			photos:this.props.navigation.params.photos,
-			user_name:this.props.navigation.params.user_name,
+			//photos:this.props.navigation.params.photos,
+			//user_name:this.props.navigation.params.user_name,
 		}
 	}
 
@@ -97,13 +127,14 @@ class PostScreen extends Component{
 }
 
 class CreatePost extends Component{
-	constructor(props)
+	static contextType = UserContext;
+	constructor(props,context)
 	{
-		super(props);
+		super(props,context);
 		this.state = {
 			description:'',
 			photos:[],
-			uid: this.context//this.props.navigation.params.uid,
+			uid: this.context.user.uid,
 		};
 	}
 
@@ -122,14 +153,13 @@ class CreatePost extends Component{
 				{
 					//var temp = GetCurrUser().uid;
 					console.log("PostCreation ");
-					tx.executeSql("INSERT INTO post(uid,caption) VALUES(?,?) ",[uid,description],
+					tx.executeSql("INSERT INTO post(user_id,caption) VALUES(?,?) ",[uid,description],
             (tx, results) => 
             {
               if(results.rowsAffected > 0)
               {
                 console.log("PostCreation ");
               } 
-              console.log("PostCreation ");
             }
             );
       tx.executeSql("SELECT * FROM post ",[],
@@ -148,8 +178,8 @@ class CreatePost extends Component{
 			
 		}
 		return(
-			<View>
-			<TextInput placeholder = "Description..." onChangeText = {description => this.setState({description})} />
+			<View style = {PostUI.creation}>
+			<TextInput style = {{color:'white'}} placeholder = "Description..." onChangeText = {description => this.setState({description})} />
 			<Button onPress={() => SubmitPost()} title = "Submit"/>
 			</View>
 			);
@@ -158,7 +188,10 @@ class CreatePost extends Component{
 CreatePost.contextType = UserContext;
 
 
-const PostUI = StyleSheet.create()
+const PostUI = StyleSheet.create(
 {
-
-}
+	creation: {
+		marginTop: 40,
+		justifyContent: 'center',
+	},
+});

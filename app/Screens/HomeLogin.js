@@ -25,18 +25,24 @@ class HomeScreen extends Component{
                     password:''};
 
     }    
-
+    
     componentDidMount()
     {
-      
-      
       db.transaction(function(tx) 
     {
-      console.log("APP constructor\n");
+      console.log("Post Table Instantiation\n");
       //Post
-      tx.executeSql("DROP TABLE IF EXISTS post", []);
+      //tx.executeSql("DROP TABLE IF EXISTS post", []);
       tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS post( post_id INTEGER PRIMARY KEY AUTOINCREMENT,uid INTEGER, caption TEXT, UNIQUE (uid, post_id))',
+            'CREATE TABLE IF NOT EXISTS post( post_id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER, caption TEXT, UNIQUE (user_id, post_id))',
+            []
+          );
+      tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS comments( comment_id INTEGER PRIMARY KEY AUTOINCREMENT, post_id INTEGER, user_id INTEGER, text TEXT, UNIQUE (user_id, post_id))',
+            []
+          );
+      tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS likes( post_id INTEGER, user_id INTEGER, UNIQUE(user_id, post_id))',
             []
           );
 
@@ -44,7 +50,6 @@ class HomeScreen extends Component{
 
       );
     }
-    
     render() {
       const { navigate } = this.props.navigation;
     const loginPress = (fun) => {
@@ -81,7 +86,7 @@ class HomeScreen extends Component{
               (tx,results) => {
                 if(results.rows.length > 0)
                 {
-                  
+                  console.log("AutoLogin attempt");
                   userName = results.rows.item(0).user_name;
                   phoNum = results.rows.item(0).phoneNum;
                   this.context.LoginUser({uid:currUser,user_name:userName,followers:0});
@@ -114,7 +119,7 @@ class HomeScreen extends Component{
             <Text style={styles.dontHave}>Dont have an account? </Text>
          
           <Button onPress={() => navigate('Register')} title= "Register" /> 
-          <Button block style={styles.button} onPress={() => navigate('Feed')} title="Feed" />
+          <Button block style={{}} onPress={() => navigate('Feed')} title="Feed" />
           </View>
           );
 
