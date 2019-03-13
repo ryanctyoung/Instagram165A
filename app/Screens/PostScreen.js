@@ -7,7 +7,11 @@ import * as  ImagePicker  from 'react-native-image-picker';
 import GetCurrUser from '../App.js';
 import {UserContext} from '../UserContext'
 import { RkButton,RkText,RkCard,RkTheme, } from 'react-native-ui-kitten';
-import {styles} from '../StyleSheet'
+import {styles} from '../StyleSheet';
+import { Avatar } from '../components/avatar';
+import { UtilStyles } from '../style/styles';
+
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export {PostScreen, CreatePost, PostItem} //also export 
 var db = openDatabase({name:'users.db'});
@@ -38,25 +42,21 @@ var db = openDatabase({name:'users.db'});
       });
   }
 
+  const likeStyle = [styles.buttonIcon, { color: RkTheme.colors.accent }];
+  const iconButton = [styles.buttonIcon, { color: RkTheme.current.colors.text.hint }];
+
   const PostItem =(item) =>
   {
   	// post: {post_ID, caption, userID} Comments: {pid, cid, userID, text} Likes: {pid, userID}
-  	const {caption} = item
-      src = './test.png';
-      return(
-        <View>
-        <Text style={{fontSize:40, color:'white'}}>{caption} </Text>
-        
-        </View>
-        );
-    /*const likes = 0;
+    const likes = 0;
     const comments = 0;
     const {caption} = item;
     const imagePost = " ";
     const Username = " ";
     const profilePicture = " ";
   return (
-    <RkCard>  
+  		<View>
+    	<RkCard>  
             <View rkCardHeader={true}>
               <View style={{ flexDirection: 'row' }}>
                 <Image source={profilePicture} style={styles.avatar} />
@@ -91,8 +91,9 @@ var db = openDatabase({name:'users.db'});
               </RkButton>
             </View>
           </RkCard>
+          </View>
 
-  );*/
+  );
   }
 
   

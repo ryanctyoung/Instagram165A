@@ -56,18 +56,17 @@ export default class FeedScreen extends Component{
   /*
   const PostItem = (item) =>
   {
-    #likes
-    #comment
-    #share
-    caption
-    imagePost
-    Username
-    ProfilePic
+    const likes = 0;
+    const comments = 0;
+    const {caption} = item;
+    const imagePost = " ";
+    const Username = " ";
+    const profilePicture = " ";
   return (
     <RkCard>  
             <View rkCardHeader={true}>
               <View style={{ flexDirection: 'row' }}>
-                <Image source={require('profilePicture')} style={styles.avatar} />
+                <Image source={profilePicture} style={styles.avatar} />
                 <View style={{}}>
                   <RkText rkType='header'>Username</RkText>
                 </View>
@@ -78,7 +77,7 @@ export default class FeedScreen extends Component{
                 <Icon style={styles.dot} name="circle" />
               </RkButton>
             </View>
-            <Image rkCardImg={true} source={require(imagePost)} />
+            <Image rkCardImg={true} source={imagePost} />
             <View rkCardContent={true}>
               <RkText rkType='hero'>
                 caption
@@ -87,15 +86,15 @@ export default class FeedScreen extends Component{
             <View rkCardFooter={true} style={styles.footer}>
               <RkButton rkType='clear link accent'>
                 <Icon name="heart" style={likeStyle} />
-                <RkText rkType='accent'>#likes</RkText>
+                <RkText rkType='accent'>likes</RkText>
               </RkButton>
               <RkButton rkType='clear link'>
                 <Icon name="comment-o" style={iconButton} />
-                <RkText rkType='hint'>#comment</RkText>
+                <RkText rkType='hint'>comments</RkText>
               </RkButton>
               <RkButton rkType='clear link'>
                 <Icon name="send-o" style={iconButton} />
-                <RkText rkType='hint'>#Share</RkText>
+                <RkText rkType='hint'></RkText>
               </RkButton>
             </View>
           </RkCard>
