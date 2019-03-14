@@ -8,18 +8,20 @@ import {openDatabase} from 'react-native-sqlite-storage';
 import {styles} from './StyleSheet.js';
 //import HomeScreen from './pages/HomeScreen';
 
-import {HomeScreen, LoginScreen, RegisterScreen} from './Screens/HomeLogin.js'
+import {HomeScreen, RegisterScreen} from './Screens/HomeLogin.js'
 import {ProfileScreen, EditScreen} from './Screens/ProfileScreens.js';
 import FeedScreen from './Screens/FeedScreen';
 import {PostScreen,CreatePost} from './Screens/PostScreen';
 import SearchWindow from './Screens/SearchWindow';
 
+import {UserContext} from './UserContext';
 //export {Database, currUser, userTuple};
 //var db = openDatabase({ name: 'users.db' });
 
 var database = {name:'users.db'};
 var db = openDatabase({name:'users.db'});
-var userTuple = {uid: 2,  user_name:'AGGIE', followers: 0}
+var userTuple = {uid: 1,  user_name:'AGGIE', followers: 0}
+
 
 /*class Database
 {
@@ -42,17 +44,6 @@ const Login = (loggedUser) =>
 }
 
 
-const PostStack = createStackNavigator(
-{ 
-  Create:CreatePost,
-    Post: PostScreen,
-    
-},
-{
-  //initialRouteName :"Post",
-  //initialRouteParams:{postID:this.props.navigation.params.postID},
-}
-  );
 
 
 
@@ -60,15 +51,19 @@ const ProfileStack = createStackNavigator(
   {
     Profile: ProfileScreen,
     Edit: EditScreen,
-    PostStack: PostStack,
 
   },
   {
+<<<<<<< HEAD
     headerMode: 'none',
     navigationOptions: {
       headerVisible: false,
     }
    }
+=======
+    
+  }
+>>>>>>> 820b05eddf161f7154d9e76e02b66a0de2ec631f
 );
 
 
@@ -90,7 +85,6 @@ const FeedStack = createStackNavigator(
   {
     Feed: FeedScreen,
     Profile: ProfileStack,
-    PostStack: PostStack,
     Search: SearchStack,
   },
   {
@@ -105,12 +99,18 @@ const TabNavigator = createBottomTabNavigator(
   {
     Feed: FeedStack,
     Search: SearchStack,
-    Post: CreatePost,
+    Create: CreatePost,
     Profile: {screen: ProfileStack, 
       navigationOptions: () => ({
       tabBarOnPress:({navigation, defaultHandler}) => {
+<<<<<<< HEAD
         navigation.setParams({uid:userTuple.uid, user_name:userTuple.user_name, pho_num:0});
         navigation.navigate('Profile', {uid:userTuple.uid, user_name:userTuple.user_name, pho_num:0});       
+=======
+
+        navigation.navigate('Profile', {uid:-1, user_name:userTuple.uid, pho_num:0});
+        
+>>>>>>> 820b05eddf161f7154d9e76e02b66a0de2ec631f
       },
       
 
@@ -139,7 +139,6 @@ const TabNavigator = createBottomTabNavigator(
 const EntryStack = createSwitchNavigator(
   {
     Home: HomeScreen,
-    Login: LoginScreen,
     Register: RegisterScreen,
     CreatePost: CreatePost,
     App: TabNavigator,
@@ -157,10 +156,31 @@ const AppContainer = createAppContainer(EntryStack);
 type Props = {};
 export default class App extends Component<Props> {
   
+  constructor(props, context)
+  {
+    super(props,context);
+    this.state = {
+      user: userTuple,
+      LoginUser: (u) => {
+        const temp = u
+        console.log("LOGINUSER" + " " + temp.uid);
+        this.setState(state => ({user:temp}))
+        userTuple = u;
 
+      },
+    };
+    
+  }
 
   render() {
+    userTuple = this.context.user;
+
     const handlePress = () => false
-    return <AppContainer />;
+    return(
+      <UserContext.Provider value = {this.state}>
+      <AppContainer />
+      </UserContext.Provider>
+      ); 
   }
 }
+App.contextType = UserContext;
