@@ -64,8 +64,11 @@ const ProfileStack = createStackNavigator(
 
   },
   {
-    header:null,
-  }
+    headerMode: 'none',
+    navigationOptions: {
+      headerVisible: false,
+    }
+   }
 );
 
 
@@ -79,7 +82,7 @@ const SearchStack = createStackNavigator(
   },
   {
     mode: 'modal',
-    headerMode: 'none',
+    headerMode: 'none'
   }
   );
 
@@ -93,33 +96,43 @@ const FeedStack = createStackNavigator(
   {
     initialRouteName: 'Feed',
     mode: 'modal',
+    header:null,
   }
 );
 
 
 const TabNavigator = createBottomTabNavigator(
   {
-    Feed:FeedStack,
+    Feed: FeedStack,
     Search: SearchStack,
     Post: CreatePost,
     Profile: {screen: ProfileStack, 
       navigationOptions: () => ({
       tabBarOnPress:({navigation, defaultHandler}) => {
         navigation.setParams({uid:userTuple.uid, user_name:userTuple.user_name, pho_num:0});
-        navigation.navigate('Profile', {uid:userTuple.uid, user_name:userTuple.user_name, pho_num:0});
-        
+        navigation.navigate('Profile', {uid:userTuple.uid, user_name:userTuple.user_name, pho_num:0});       
       },
+      
 
       })
+
+
     },
+
+   
     //Settings: SettingStack,
 
     
 
   },
+   
   {
+    
     initialRouteName: 'Feed',
+    
   }
+
+  
     );
 
 
@@ -128,7 +141,9 @@ const EntryStack = createSwitchNavigator(
     Home: HomeScreen,
     Login: LoginScreen,
     Register: RegisterScreen,
+    CreatePost: CreatePost,
     App: TabNavigator,
+
   },
   {
     initialRouteName: 'Home',

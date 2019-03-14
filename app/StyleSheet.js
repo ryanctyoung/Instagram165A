@@ -6,6 +6,13 @@ welcomewrap: {
   marginTop: 75
 },
 
+buttonContainer: {
+  position: 'absolute',
+  bottom:70,
+  left: 244,
+  fontSize: 5
+},
+
 wrapper: {
     flex: 1,
     marginTop: 50,
@@ -40,9 +47,9 @@ submitButton: {
   },
   register: {
     fontSize: 15,
-    color: 'blue',
+    color: 'grey',
     textAlign: 'left',
-    bottom:50
+    bottom:25
   },
 
   HomeLogin: {
@@ -91,12 +98,19 @@ submitButton: {
     textAlign:'center',
   },
   dontHave: {
-    fontSize: 15,
+    fontSize: 14,
     color: 'grey',
     textAlign: 'center',
     margin: 0,
     
-
+  },
+  dontHave2: {
+    fontSize: 14,
+    color: 'grey',
+    bottom:-10,
+  left: 100,
+    margin: 0,
+    
   },
 
   bio: {

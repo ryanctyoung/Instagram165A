@@ -6,7 +6,7 @@ import {database} from "../App.js";
 import {styles} from '../StyleSheet.js';
 import {GetCurrUser} from '../App.js'
 import * as  ImagePicker  from 'react-native-image-picker';
-import { RkButton,RkText,RkCard,RkTheme, } from 'react-native-ui-kitten';
+import { RkButton,RkText,RkCard,RkTheme,RkTextInput } from 'react-native-ui-kitten';
 import { Avatar } from '../components/avatar';
 import { UtilStyles } from '../style/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -138,8 +138,7 @@ class ProfileScreen extends Component{
         return(
           <View style={styles.wrapper}>
            
-           <Button block style={styles.button} onPress={()=> navigate('Edit')} title ={ 'Edit Profile'}/>
-           <Button block style={styles.button} onPress={()=> navigate('Create', {uid:currUser}) } title ={ 'Upload Post'}/>
+          
             
         </View>
           );//
@@ -191,9 +190,9 @@ class ProfileScreen extends Component{
       automaticallyAdjustContentInsets={true}
       style={UtilStyles.container}>
         <View style={profileUI.wrapper}>
-          <Text style={profileUI.profileTitle}> {user_name}'s Profile </Text>
-          <Image source={require('../img/Ava1.png')} style={styless.avatar} />  
-          <Text style={profileUI.profileTitle}> {user_name} </Text>
+          <Text style={profileUI.profileTitle}>  </Text>
+          <Image source={require('../img/avatar1.png')} style={styless.avatar} />  
+          <Text style={profileUI.profileTitle}> Jane Doe </Text>
             <View style={profileUI.followStats} >
             <View >
             <Text style={profileUI.profiledetail}> {this.state.followers} </Text>
@@ -213,8 +212,8 @@ class ProfileScreen extends Component{
        </View>
            <View style={profileUI.wrapper}>
            <View style={profileUI.followStats2} >
-           <RkButton rkType='primary' style={UtilStyles.spaceBottom} onPress={()=> navigate('Edit')} > Edit Profile </RkButton>
-           <RkButton rkType='primary' style={UtilStyles.spaceBottom} onPress={()=> navigate('Create', {uid:currUser}) } > Privacy </RkButton>
+           <RkButton rkType='primary' style={UtilStyles.spaceBottom} onPress={()=> navigate('Edit')} > Block </RkButton>
+           <RkButton rkType='primary' style={UtilStyles.spaceBottom} onPress={()=> navigate('Create', {uid:currUser}) } > Follow </RkButton>
            </View>
            </View>
            <View style={profileUI.wrapper}>
@@ -222,17 +221,17 @@ class ProfileScreen extends Component{
              Bio 
            </Text>
            <Text style={profileUI.bio}>
-             I love to eat grass and drink water! 
+             I love coffee and donuts 
            </Text>
            </View>
            <View style={{ flex: 1 }}>
       <RkCard>  
             <View rkCardHeader={true}>
               <View style={{ flexDirection: 'row' }}>
-                <Image source={require('../img/Ava1.png')} style={styless.avatar} />
+                <Image source={require('../img/Agg.png')} style={styless.avatar} />
                 <View style={{}}>
-                  <RkText rkType='header'>AGGIE</RkText>
-                  <RkText rkType='subtitle'>7 minutes ago</RkText>
+                  <RkText rkType='header'>Jane Doe</RkText>
+                  <RkText rkType='subtitle'>12 minutes ago</RkText>
                 </View>
               </View>
               <RkButton rkType='clear'>
@@ -241,10 +240,47 @@ class ProfileScreen extends Component{
                 <Icon style={styles.dot} name="circle" />
               </RkButton>
             </View>
-            <Image rkCardImg={true} source={require('../img/post2.png')} />
+            <Image rkCardImg={true} source={require('../img/post3.png')} />
             <View rkCardContent={true}>
               <RkText rkType='hero'>
-                Meet Catty!!! 
+                I love these flowers!!
+              </RkText>
+            </View>
+            <View rkCardFooter={true} style={styles.footer}>
+              <RkButton rkType='clear link accent'>
+                <Icon name="heart" style={likeStyle} />
+                <RkText rkType='accent'>0</RkText>
+              </RkButton>
+              <RkButton rkType='clear link'>
+                <Icon name="comment-o" style={iconButton} />
+                <RkText rkType='hint'>0</RkText>
+              </RkButton>
+              <RkButton rkType='clear link'>
+                <Icon name="send-o" style={iconButton} />
+                <RkText rkType='hint'>0</RkText>
+              </RkButton>
+            </View>
+          </RkCard>
+
+          <RkCard>  
+            <View rkCardHeader={true}>
+              <View style={{ flexDirection: 'row' }}>
+                <Image source={require('../img/avatar1.png')} style={styless.avatar} />
+                <View style={{}}>
+                  <RkText rkType='header'>Jane Doe</RkText>
+                  <RkText rkType='subtitle'>50 minutes ago</RkText>
+                </View>
+              </View>
+              <RkButton rkType='clear'>
+                <Icon style={styles.dot} name="circle" />
+                <Icon style={styles.dot} name="circle" />
+                <Icon style={styles.dot} name="circle" />
+              </RkButton>
+            </View>
+            <Image rkCardImg={true} source={require('../img/post5.png')} />
+            <View rkCardContent={true}>
+              <RkText rkType='hero'>
+                I love this mountain!!! 
               </RkText>
             </View>
             <View rkCardFooter={true} style={styles.footer}>
@@ -313,18 +349,40 @@ class EditScreen extends Component{
         });
     };
     return (
+      <ScrollView
+      automaticallyAdjustContentInsets={true}
+      style={UtilStyles.container}> 
       <View style={profileUI.wrapper}>
-            <Text style={styles.register}>user name</Text>
-            <TextInput style={styles.register} placeholder="Please enter your username" onChangeText={user_name => this.setState({ user_name })}/>
-            <Text style={styles.register}>Email</Text>
-            <TextInput style={styles.register}placeholder="Please enter your email" onChangeText={email => this.setState({ email })}/>
-            <Text style={styles.register}>Phone Number</Text>
-            <TextInput style={styles.register} placeholder="Please enter your phone number" onChangeText={phoneNum => this.setState({ phoneNum})}/>            
-        <Button icon="md-checkmark" iconPlacement="right" onPress={donePress} title="Done"/>
+      <Image source={require('../img/Agg.png')} style={styless.avatar} />  
+        <Text style={profileUI.profileTitle}> Aggie </Text>
+        <RkButton rkType='example1' style={UtilStyles.spaceBottom} > Change Picture </RkButton>
+        <RkButton rkType='example' style={{left: 150, bottom: 140}}>Edit Profile Bio</RkButton>
+      <Text style={styles.register}>User Name</Text>
+        <RkTextInput rkType='success' placeholder="Please enter your user name" onChangeText={user_name => this.setState({ user_name})}/>
+        <Text style={styles.register}>Email</Text>
+        <RkTextInput rkType='success' placeholder="Please enter your email" onChangeText={email => this.setState({ email})}/>
+        <Text style={styles.register}>Phone Number</Text>
+        <RkTextInput rkType='success' placeholder="Please enter your Phone Number" onChangeText={phoneNum => this.setState({ phoneNum})}/>
+        <RkButton rkType='example1' style={{bottom: 35, left: 120}} onPress={donePress} > Update </RkButton>            
       </View>
+      </ScrollView>
     );
   }
 }
+RkTheme.setType('RkButton', 'example', {
+  fontSize: 12,
+  width: 150,
+  height: 150,
+  backgroundColor: 'gray'
+  
+});
+RkTheme.setType('RkButton', 'example1', {
+  fontSize: 12,
+  width: 120,
+  height:35,
+  backgroundColor: 'gray'
+  
+});
 
 RkTheme.setType('RkCard', 'story', {
   img: {
@@ -390,7 +448,7 @@ const profileUI = StyleSheet.create(
 {
     wrapper: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: 'black',      
   },
 
     followStats:{

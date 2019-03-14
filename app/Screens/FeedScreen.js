@@ -3,7 +3,7 @@ import {Platform,Image, StyleSheet, Text, View, Button, TextInput, TouchableHigh
 import {openDatabase} from 'react-native-sqlite-storage';
 import {createDrawerNavigator} from 'react-navigation';
 import * as  ImagePicker  from 'react-native-image-picker';
-import { RkButton,RkText,RkCard,RkTheme, } from 'react-native-ui-kitten';
+import { RkButton,RkText,RkCard,RkTheme, RkTextInput } from 'react-native-ui-kitten';
 import { Avatar } from '../components/avatar';
 import { UtilStyles } from '../style/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -81,25 +81,26 @@ export default class FeedScreen extends Component{
       <ScrollView
       automaticallyAdjustContentInsets={true}
       style={UtilStyles.container}>
-       <View style = {feedUI.wrapper}> 
-       <View style={UtilStyles.columnContainer}>
-          <Avatar rkType='round'
-            source={require('../img/avatars/Ava1.png')}
-            name='Mona Lisa'
-          />
+      <View style={{ flex: 1 }}>
+      <View style = {feedUI.wrapper}> 
+      <View style={UtilStyles.columnContainer}>
+      
+          <Image source={require('../img/Agg.png')} style={styless.avatar} /> 
+          <Text style={profileUI.profileTitle}> Aggie </Text>
         </View>
-    <Text style={feedUI.label}>If there is a will, there is awalys be a way</Text>
+    <Text style={feedUI.label}>
+    Only a life lived for 
+    </Text>
+    <Text style={feedUI.label}>others is a life worthwhile</Text>
     <FeedPosts/>
-    <Button style={feedUI.searchbutton} onPress = {()=> SearchOn()} title='Search'/>
-    </View>
-<View style={{ flex: 1 }}>
+   
       <RkCard>  
             <View rkCardHeader={true}>
               <View style={{ flexDirection: 'row' }}>
                 <Image source={require('../img/cow.png')} style={styles.avatar} />
                 <View style={{}}>
                   <RkText rkType='header'>UC Davis Aggies</RkText>
-                  <RkText rkType='subtitle'>7 minutes ago</RkText>
+                  <RkText rkType='subtitle'>10 minutes ago</RkText>
                 </View>
               </View>
               <RkButton rkType='clear'>
@@ -117,15 +118,15 @@ export default class FeedScreen extends Component{
             <View rkCardFooter={true} style={styles.footer}>
               <RkButton rkType='clear link accent'>
                 <Icon name="heart" style={likeStyle} />
-                <RkText rkType='accent'>12,531</RkText>
+                <RkText rkType='accent'>0</RkText>
               </RkButton>
               <RkButton rkType='clear link'>
                 <Icon name="comment-o" style={iconButton} />
-                <RkText rkType='hint'>5671</RkText>
+                <RkText rkType='hint'>0</RkText>
               </RkButton>
               <RkButton rkType='clear link'>
                 <Icon name="send-o" style={iconButton} />
-                <RkText rkType='hint'>5K</RkText>
+                <RkText rkType='hint'>0</RkText>
               </RkButton>
             </View>
           </RkCard>
@@ -135,7 +136,7 @@ export default class FeedScreen extends Component{
                 <Image source={require('../img/cow.png')} style={styles.avatar} />
                 <View style={{}}>
                   <RkText rkType='header'>UC Davis Aggies</RkText>
-                  <RkText rkType='subtitle'>25 minutes ago</RkText>
+                  <RkText rkType='subtitle'>45 minutes ago</RkText>
                 </View>
               </View>
               <RkButton rkType='clear'>
@@ -147,24 +148,26 @@ export default class FeedScreen extends Component{
             <Image rkCardImg={true} source={require('../img/Aggie.gif')} />
             <View rkCardContent={true}>
               <RkText rkType='hero'>
-                That Feeling when you know you're almost done with the Quarter!
+               GunRock Does know how to dance!!
               </RkText>
             </View>
             <View rkCardFooter={true} style={styles.footer}>
               <RkButton rkType='clear link accent'>
                 <Icon name="heart" style={likeStyle} />
-                <RkText rkType='accent'>12,531</RkText>
+                <RkText rkType='accent'>0</RkText>
               </RkButton>
               <RkButton rkType='clear link'>
                 <Icon name="comment-o" style={iconButton} />
-                <RkText rkType='hint'>5671</RkText>
+                <RkText rkType='hint'>0</RkText>
               </RkButton>
               <RkButton rkType='clear link'>
                 <Icon name="send-o" style={iconButton} />
-                <RkText rkType='hint'>5K</RkText>
+                <RkText rkType='hint'>0</RkText>
               </RkButton>
             </View>
           </RkCard>
+      </View>
+      
       </View>
       </ScrollView>
     );
@@ -239,9 +242,10 @@ const feedUI = StyleSheet.create(
     },
 
     label:{
-      fontSize: 15,
+    fontSize: 15,
     color: 'grey',
-    textAlign: 'center',
+    bottom: 50,
+    left: 70,
     margin: 10,
     fontWeight: 'bold',
     fontStyle: 'italic'
@@ -260,3 +264,95 @@ const feedUI = StyleSheet.create(
     },
   }
 );
+
+const profileUI = StyleSheet.create(
+  {
+      wrapper: {
+      flex: 1,
+      backgroundColor: 'black',      
+    },
+  
+      followStats:{
+        borderEndWidth:-10,
+        justifyContent: 'center',
+        alignContent:'flex-start',
+        flexDirection:'row',
+        right:-50,
+        bottom:80,
+        color:'blue',
+      },
+      followStats2:{
+        justifyContent: 'center',
+        alignContent:'center',
+        flexDirection:'row',
+        right:-50,
+        bottom:70,
+        color:'blue',
+      },
+      profiledetail: {
+      fontSize: 12,
+      fontWeight: 'bold',
+      overflow: 'hidden',
+      color:'blue',
+      padding: 0,
+      marginLeft: 20,
+    },
+      bio: {
+      fontSize: 12,
+      fontWeight: 'bold',
+      overflow: 'hidden',
+      color:'blue',
+      padding: 0,
+      marginLeft: 20,
+      bottom:45
+    },
+  
+      profileTitle: {
+        color:'darkgreen',fontSize: 15,
+      fontWeight: 'bold',
+  
+      }
+  });
+
+  let styless = StyleSheet.create({
+    screen: {
+      backgroundColor: '#f0f1f5',
+      padding: 12,
+    },
+    buttonIcon: {
+      marginRight: 7,
+      fontSize: 19.7,
+    },
+    footer: {
+      marginHorizontal: 16,
+    },
+    avatar: {
+      width: 42,
+      height: 42,
+      borderRadius: 21,
+      marginRight: 17,
+    },
+    dot: {
+      fontSize: 6.5,
+      color: '#0000008e',
+      marginLeft: 2.5,
+      marginVertical: 10,
+    },
+    floating: {
+      width: 56,
+      height: 56,
+      position: 'absolute',
+      zIndex: 200,
+      right: 16,
+      top: 173,
+    },
+    footerButtons: {
+      flexDirection: 'row',
+    },
+    overlay: {
+      justifyContent: 'flex-end',
+      paddingVertical: 23,
+      paddingHorizontal: 16,
+    },
+  });
+  

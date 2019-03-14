@@ -74,15 +74,20 @@ class HomeScreen extends Component{
             <RkButton rkType= 'rounded' style={styles.rkButtonHome}
             contentStyle={{color: 'red'}} buttonStyle={{ width: 50 }} onPress={() => navigate('Login')}>Sign in</RkButton>
             <View styles = {styles.bottomTest}>
-              <Button styles = {styles.bottomTest} onPress={() => navigate('Forget Password')} title="Forget Password?" />
+              <Button styles = {styles.bottomTest} onPress={() => navigate('ForgetPass')} title="Forget Password?" />
             </View>
-        
+            <Text></Text>
             <Text style={styles.dontHave}>OR</Text>
-            <Text style={styles.dontHave}>Dont have an account? </Text>
+            <Text></Text>
+            <Text style={styles.dontHave2}>Dont have an account?       </Text>
+           <Text></Text> 
+      <View style={styles.buttonContainer}>
+      <Button onPress={() => navigate('Register')} title= "Register" />  
+    </View>
          
-          <Button onPress={() => navigate('Register')} title= "Register" />  
-          <Button block style={styles.button} onPress={() => navigate('Login')} title="Login" />
+         
           <Button block style={styles.button} onPress={() => navigate('Feed')} title="Feed" />
+          <Button block style={styles.button} onPress={() => navigate('CreatePost')} title="post" />
           </View>
           );
 
@@ -221,14 +226,12 @@ class RegisterScreen extends Component{
         automaticallyAdjustContentInsets={true}>
         
         <View style={styles.container}>
+
         <Text style={styles.register}>User Name</Text>
         <RkTextInput rkType='success' placeholder="Please Enter Your user name" onChangeText={user_name=> this.setState({ user_name })} />
         
         <Text style={styles.register}>First Name</Text>
         <RkTextInput rkType='success' placeholder="Please Enter Your First Name" onChangeText={FirstName => this.setState({ FirstName })} />
-        
-        <Text style={styles.register}>Last Name</Text>
-        <RkTextInput rkType='success' placeholder="Please enter your Last Name" onChangeText={LastName => this.setState({ LastName})}/>
             
         <Text style={styles.register}>Date Of Birth</Text>
         <RkTextInput rkType='success' placeholder="Please enter your date of birth" onChangeText={DOB => this.setState({ DOB})}/>
@@ -241,13 +244,83 @@ class RegisterScreen extends Component{
         
         <Text style={styles.register}>Password</Text>
         <RkTextInput rkType='success'placeholder="Please enter your password" onChangeText={password => this.setState({ password })}/>
-            
+        <Text></Text>
         <RkButton rkType= 'rounded' style={styles.rkButtonHome}
             contentStyle={{color: 'red'}} buttonStyle={{ width: 50 }} onPress={() => navigate('HomeScreen')}>Register</RkButton>
-
+        <Text></Text>
         <RkButton rkType= 'rounded' style={styles.rkButtonHome}
             contentStyle={{color: 'red'}} buttonStyle={{ width: 50 }} onPress={() => navigate('HomeScreen')}>Back</RkButton>
-            <Button icon="md-checkmark" iconPlacement="right" onPress={handlePress} title="Register"/>
+        </View>
+        </ScrollView>
+    );
+  }
+}
+
+class ForgetPass extends Component{
+  
+
+  render() {
+    const handlePress = () => {
+      const { navigate } = this.props.navigation;
+      const { FirstName } = this.state;
+      const { LastName } = this.state;
+      const { user_name } = this.state;
+      const { email } = this.state;
+      const { password } = this.state;
+      const { DOB } = this.state;
+      const { phoneNum } = this.state;
+      db.transaction(function(tx) {
+          tx.executeSql('DROP TABLE IF EXISTS followers', []);
+
+          tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name TEXT UNIQUE, FirstName TEXT, LastName TEXT, email TEXT, password TEXT, DOB INTEGER DEFAULT 0, phoneNum INTEGER DEFAULT 0)',
+            []
+          );
+          tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS followers(uid INTEGER, follower_id INTEGER, UNIQUE (uid, follower_id))',
+            []
+          );
+
+          tx.executeSql(
+            'INSERT INTO users(user_name, FirstName, LastName, email, password, DOB, phoneNum) VALUES (?,?,?,?,?,?,?)',
+            [user_name, FirstName, LastName, email,password, DOB, phoneNum],
+            (tx, results) => {
+              if(results.rowsAffected > 0)
+              {
+                tx.executeSql(
+              'SELECT * FROM users WHERE user_name = ?',[user_name],(tx,results) => {
+                if(results.rows.length > 0)
+                {
+                  Login({uid:results.rows.item(0).user_id,user_name:user_name, followers: 0});
+                  navigate('Home'); 
+                }
+               
+              }
+              );
+              }
+              
+            }); 
+  })
+};
+    return (
+      <ScrollView
+        style={UtilStyles.container}
+        automaticallyAdjustContentInsets={true}>
+        
+        <View style={styles.container}>
+
+        <Text style={styles.register}>User Name</Text>
+        <RkTextInput rkType='success' placeholder="Please Enter Your user name" onChangeText={user_name=> this.setState({ user_name })} />
+        
+        <Text style={styles.register}>First Name</Text>
+        <RkTextInput rkType='success' placeholder="Please Enter Your First Name" onChangeText={FirstName => this.setState({ FirstName })} />
+            
+       
+        <RkButton rkType= 'rounded' style={styles.rkButtonHome}
+            contentStyle={{color: 'red'}} buttonStyle={{ width: 50 }} onPress={() => navigate('HomeScreen')}>Register</RkButton>
+        <Text></Text>
+        <RkButton rkType= 'rounded' style={styles.rkButtonHome}
+            contentStyle={{color: 'red'}} buttonStyle={{ width: 50 }} onPress={() => navigate('HomeScreen')}>Back</RkButton>
         </View>
         </ScrollView>
     );
@@ -261,7 +334,7 @@ RkTheme.setType('RkTextInput','success',{
   labelFontSize:15,
   underlineWidth:1,
  
-  bottom: 70,
+  bottom: 45,
   input:{backgroundColor: 'black',color: 'red'}
 });
 
